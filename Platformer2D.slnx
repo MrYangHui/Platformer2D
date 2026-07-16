@@ -8,6 +8,7 @@
   <Project Path="Game.Player.Tests.EditMode.csproj" />
   <Project Path="Game.Infrastructure.csproj" />
   <Project Path="Game.Presentation.csproj" />
+  <Project Path="Game.Infrastructure.Editor.csproj" />
   <Project Path="Game.Level.Tests.EditMode.csproj" />
   <Project Path="Game.Core.Tests.EditMode.csproj" />
 </Solution>

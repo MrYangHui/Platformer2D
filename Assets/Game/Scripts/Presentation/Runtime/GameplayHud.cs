@@ -26,7 +26,7 @@ namespace SnowbreakFan.Presentation
             completedChannel.Raised -= ShowCompleted;
         }
 
-        private void RenderCount(int current, int total) => countText.text = $"样本 {current}/{total}";
+        private void RenderCount(int current, int total) => countText.text = $"Samples {current}/{total}";
         private void ShowCompleted() => completedPanel.SetActive(true);
     }
 }

@@ -36,7 +36,7 @@ namespace SnowbreakFan.Tests.PlayMode
             Assert.That(countObject, Is.Not.Null);
             Component textComponent = countObject.GetComponent("TextMeshProUGUI");
             string renderedText = (string)textComponent.GetType().GetProperty("text").GetValue(textComponent);
-            Assert.That(renderedText, Is.EqualTo("样本 3/3"));
+            Assert.That(renderedText, Is.EqualTo("Samples 3/3"));
 
             PlayerRespawnTarget player = Object.FindFirstObjectByType<PlayerRespawnTarget>();
             GameObject endpoint = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None)

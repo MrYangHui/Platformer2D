@@ -8,27 +8,37 @@ namespace SnowbreakFan.Infrastructure
     {
         [SerializeField] private BootstrapSettings settings;
 
-        private static bool activeInstance;
-        private bool ownsActiveFlag;
+        private static GameBootstrap instance;
+        private bool isLoadingScenes;
 
         private void Awake()
         {
-            if (activeInstance)
+            if (instance != null && instance != this)
             {
+                instance.EnsureScenesLoaded();
                 Destroy(gameObject);
                 return;
             }
 
-            activeInstance = true;
-            ownsActiveFlag = true;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
 
-        private IEnumerator Start()
+        private void Start() => EnsureScenesLoaded();
+
+        private void EnsureScenesLoaded()
         {
+            if (!isLoadingScenes)
+                StartCoroutine(LoadConfiguredScenes());
+        }
+
+        private IEnumerator LoadConfiguredScenes()
+        {
+            isLoadingScenes = true;
             if (settings == null)
             {
                 Debug.LogError("GameBootstrap requires BootstrapSettings.", this);
+                isLoadingScenes = false;
                 yield break;
             }
 
@@ -38,18 +48,21 @@ namespace SnowbreakFan.Infrastructure
                 if (SceneUtility.GetBuildIndexByScenePath(scenePath) < 0)
                 {
                     Debug.LogError($"Scene is not enabled in Build Profiles: {sceneName}", this);
+                    isLoadingScenes = false;
                     yield break;
                 }
 
                 if (!SceneManager.GetSceneByName(sceneName).isLoaded)
                     yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             }
+
+            isLoadingScenes = false;
         }
 
         private void OnDestroy()
         {
-            if (ownsActiveFlag)
-                activeInstance = false;
+            if (instance == this)
+                instance = null;
         }
     }
 }
