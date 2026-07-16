@@ -1,7 +1,10 @@
 ﻿<Solution>
   <Project Path="Game.Player.csproj" />
+  <Project Path="Game.Level.csproj" />
   <Project Path="Game.Core.csproj" />
   <Project Path="Game.Player.Tests.EditMode.csproj" />
   <Project Path="Game.Infrastructure.csproj" />
+  <Project Path="Game.Tests.PlayMode.csproj" />
+  <Project Path="Game.Level.Tests.EditMode.csproj" />
   <Project Path="Game.Core.Tests.EditMode.csproj" />
 </Solution>

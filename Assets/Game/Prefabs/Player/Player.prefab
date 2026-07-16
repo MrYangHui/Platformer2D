@@ -61,6 +61,7 @@ GameObject:
   - component: {fileID: 2123452597928065461}
   - component: {fileID: 2490836344619944289}
   - component: {fileID: 555633563281751258}
+  - component: {fileID: 8937308272023160075}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -179,6 +180,19 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 09b05ada9d159e54284e991bbbf425e2, type: 2}
   input: {fileID: 2490836344619944289}
   groundProbe: {fileID: 3276222288413101209}
+--- !u!114 &8937308272023160075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4389958313304831977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bdf6c3dfbd0120428db81a8f80e1181, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Game.Player::SnowbreakFan.Player.PlayerRespawnTarget
+  motor: {fileID: 555633563281751258}
 --- !u!1 &7314743237029618837
 GameObject:
   m_ObjectHideFlags: 0
