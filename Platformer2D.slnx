@@ -1,2 +1,5 @@
 ﻿<Solution>
+  <Project Path="Game.Core.csproj" />
+  <Project Path="Game.Infrastructure.csproj" />
+  <Project Path="Game.Core.Tests.EditMode.csproj" />
 </Solution>
