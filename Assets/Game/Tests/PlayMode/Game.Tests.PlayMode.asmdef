@@ -6,7 +6,8 @@
     "Game.Player",
     "Game.Level",
     "Game.Collectibles",
-    "Game.Presentation"
+    "Game.Presentation",
+    "Unity.Cinemachine"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
