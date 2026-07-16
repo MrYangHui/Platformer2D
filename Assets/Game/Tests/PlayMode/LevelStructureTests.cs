@@ -59,7 +59,11 @@ namespace SnowbreakFan.Tests.PlayMode
 
             Checkpoint2D[] checkpoints = Object.FindObjectsByType<Checkpoint2D>(FindObjectsSortMode.None);
             Assert.That(checkpoints, Has.Length.GreaterThanOrEqualTo(2));
-            Assert.That(checkpoints.Max(checkpoint => checkpoint.transform.position.y), Is.GreaterThanOrEqualTo(13f));
+            float topVerticalPlatformSurface = verticalPlatforms.Cast<Transform>()
+                .Max(item => item.GetComponent<BoxCollider2D>().bounds.max.y);
+            Assert.That(
+                checkpoints.Max(checkpoint => checkpoint.transform.position.y),
+                Is.EqualTo(topVerticalPlatformSurface + 1.5f).Within(0.05f));
 
             int playerLayer = LayerMask.NameToLayer("Player");
             int groundLayer = LayerMask.NameToLayer("Ground");
@@ -165,6 +169,145 @@ namespace SnowbreakFan.Tests.PlayMode
                     $"needs {requiredHorizontalRange:0.##} horizontal units, above the safe configured range " +
                     $"{safeHorizontalRange:0.##}.");
             }
+        }
+
+        [UnityTest]
+        public IEnumerator Chunk03VerticalRouteFitsConfiguredJumpEnvelope()
+        {
+            yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
+            Physics2D.SyncTransforms();
+
+            LevelChunk2D chunk = Object.FindObjectsByType<LevelChunk2D>(FindObjectsSortMode.None)
+                .Single(item => item.name == "Chunk_03_Vertical");
+            PlayerMovementConfig config = Resources.FindObjectsOfTypeAll<PlayerMovementConfig>()
+                .Single(item => item.name == "PlayerMovementConfig");
+            BoxCollider2D[] route = chunk.transform.Find("Platforms")
+                .Cast<Transform>()
+                .Select(item => item.GetComponent<BoxCollider2D>())
+                .Where(item => item != null)
+                .OrderBy(item => item.bounds.center.x)
+                .ToArray();
+
+            Assert.That(route, Has.Length.EqualTo(7));
+
+            float risingGravity = Mathf.Abs(Physics2D.gravity.y) * config.GravityScale;
+            float fallingGravity = risingGravity * config.FallGravityMultiplier;
+            float maximumRise = config.JumpSpeed * config.JumpSpeed / (2f * risingGravity);
+            float timeToApex = config.JumpSpeed / risingGravity;
+            const float horizontalSafetyFactor = 0.85f;
+
+            for (int index = 0; index < route.Length - 1; index++)
+            {
+                BoxCollider2D source = route[index];
+                BoxCollider2D destination = route[index + 1];
+                float heightDelta = destination.bounds.max.y - source.bounds.max.y;
+
+                Assert.That(heightDelta, Is.LessThanOrEqualTo(maximumRise),
+                    $"Vertical transition at x={source.bounds.center.x:0.##} -> {destination.bounds.center.x:0.##} " +
+                    $"rises {heightDelta:0.##}, above the configured maximum {maximumRise:0.##}.");
+
+                float fallingTime = Mathf.Sqrt(2f * (maximumRise - heightDelta) / fallingGravity);
+                float safeHorizontalRange = config.MaxSpeed * (timeToApex + fallingTime) * horizontalSafetyFactor;
+                float requiredHorizontalRange = Mathf.Max(0f, destination.bounds.min.x - source.bounds.max.x);
+
+                Assert.That(requiredHorizontalRange, Is.LessThanOrEqualTo(safeHorizontalRange),
+                    $"Vertical transition at x={source.bounds.center.x:0.##} -> {destination.bounds.center.x:0.##} " +
+                    $"needs {requiredHorizontalRange:0.##} horizontal units, above the safe configured range " +
+                    $"{safeHorizontalRange:0.##}.");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Chunk04MainAndRecoveryRoutesFitConfiguredJumpEnvelope()
+        {
+            yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
+            Physics2D.SyncTransforms();
+
+            LevelChunk2D chunk = Object.FindObjectsByType<LevelChunk2D>(FindObjectsSortMode.None)
+                .Single(item => item.name == "Chunk_04_Recovery");
+            PlayerMovementConfig config = Resources.FindObjectsOfTypeAll<PlayerMovementConfig>()
+                .Single(item => item.name == "PlayerMovementConfig");
+            BoxCollider2D[] platforms = chunk.transform.Find("Platforms")
+                .Cast<Transform>()
+                .Select(item => item.GetComponent<BoxCollider2D>())
+                .Where(item => item != null)
+                .ToArray();
+            BoxCollider2D[] mainRoute = platforms
+                .Where(item => item.bounds.center.y > -2.5f)
+                .OrderBy(item => item.bounds.center.x)
+                .ToArray();
+            BoxCollider2D[] recoveryRoute = platforms
+                .Where(item => item.bounds.center.y <= -2.5f)
+                .OrderBy(item => item.bounds.center.x)
+                .ToArray();
+
+            Assert.That(mainRoute, Has.Length.EqualTo(6));
+            Assert.That(recoveryRoute, Has.Length.EqualTo(2));
+            AssertRouteFitsConfiguredJumpEnvelope(mainRoute, config, "Chunk 04 main route");
+            AssertRouteFitsConfiguredJumpEnvelope(recoveryRoute, config, "Chunk 04 recovery floor");
+            AssertTransitionFitsConfiguredJumpEnvelope(
+                recoveryRoute[^1],
+                mainRoute[^2],
+                config,
+                "Chunk 04 recovery rejoin");
+        }
+
+        [UnityTest]
+        public IEnumerator Chunk05FinalRouteFitsConfiguredJumpEnvelope()
+        {
+            yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
+            Physics2D.SyncTransforms();
+
+            LevelChunk2D chunk = Object.FindObjectsByType<LevelChunk2D>(FindObjectsSortMode.None)
+                .Single(item => item.name == "Chunk_05_Final");
+            PlayerMovementConfig config = Resources.FindObjectsOfTypeAll<PlayerMovementConfig>()
+                .Single(item => item.name == "PlayerMovementConfig");
+            BoxCollider2D[] route = chunk.transform.Find("Platforms")
+                .Cast<Transform>()
+                .Select(item => item.GetComponent<BoxCollider2D>())
+                .Where(item => item != null)
+                .OrderBy(item => item.bounds.center.x)
+                .ToArray();
+
+            Assert.That(route, Has.Length.EqualTo(6));
+            AssertRouteFitsConfiguredJumpEnvelope(route, config, "Chunk 05 final route");
+        }
+
+        private static void AssertRouteFitsConfiguredJumpEnvelope(
+            IReadOnlyList<BoxCollider2D> route,
+            PlayerMovementConfig config,
+            string routeName)
+        {
+            for (int index = 0; index < route.Count - 1; index++)
+            {
+                AssertTransitionFitsConfiguredJumpEnvelope(route[index], route[index + 1], config, routeName);
+            }
+        }
+
+        private static void AssertTransitionFitsConfiguredJumpEnvelope(
+            BoxCollider2D source,
+            BoxCollider2D destination,
+            PlayerMovementConfig config,
+            string routeName)
+        {
+            float risingGravity = Mathf.Abs(Physics2D.gravity.y) * config.GravityScale;
+            float fallingGravity = risingGravity * config.FallGravityMultiplier;
+            float maximumRise = config.JumpSpeed * config.JumpSpeed / (2f * risingGravity);
+            float heightDelta = destination.bounds.max.y - source.bounds.max.y;
+
+            Assert.That(heightDelta, Is.LessThanOrEqualTo(maximumRise),
+                $"{routeName} transition at x={source.bounds.center.x:0.##} -> {destination.bounds.center.x:0.##} " +
+                $"rises {heightDelta:0.##}, above the configured maximum {maximumRise:0.##}.");
+
+            float timeToApex = config.JumpSpeed / risingGravity;
+            float fallingTime = Mathf.Sqrt(2f * (maximumRise - heightDelta) / fallingGravity);
+            float safeHorizontalRange = config.MaxSpeed * (timeToApex + fallingTime) * 0.85f;
+            float requiredHorizontalRange = Mathf.Max(0f, destination.bounds.min.x - source.bounds.max.x);
+
+            Assert.That(requiredHorizontalRange, Is.LessThanOrEqualTo(safeHorizontalRange),
+                $"{routeName} transition at x={source.bounds.center.x:0.##} -> {destination.bounds.center.x:0.##} " +
+                $"needs {requiredHorizontalRange:0.##} horizontal units, above the safe configured range " +
+                $"{safeHorizontalRange:0.##}.");
         }
     }
 }
