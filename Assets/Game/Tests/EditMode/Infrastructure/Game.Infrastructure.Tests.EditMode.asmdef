@@ -1,0 +1,14 @@
+{
+  "name": "Game.Infrastructure.Tests.EditMode",
+  "rootNamespace": "SnowbreakFan.Infrastructure.Tests",
+  "references": [
+    "Game.Infrastructure.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

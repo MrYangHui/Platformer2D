@@ -73,5 +73,27 @@ namespace SnowbreakFan.Tests.PlayMode
             };
             Assert.That(SortingLayer.layers.Select(layer => layer.name).Skip(1), Is.EqualTo(expectedSortingLayers));
         }
+
+        [UnityTest]
+        public IEnumerator EveryPlatformVisualMatchesItsCollisionBounds()
+        {
+            yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
+
+            LevelChunk2D[] chunks = Object.FindObjectsByType<LevelChunk2D>(FindObjectsSortMode.None);
+            foreach (LevelChunk2D chunk in chunks)
+            {
+                foreach (Transform platform in chunk.transform.Find("Platforms"))
+                {
+                    BoxCollider2D collider = platform.GetComponent<BoxCollider2D>();
+                    SpriteRenderer renderer = platform.GetComponentInChildren<SpriteRenderer>();
+                    Assert.That(collider, Is.Not.Null, $"{platform.name} is missing its collider.");
+                    Assert.That(renderer, Is.Not.Null, $"{platform.name} is missing its visual.");
+                    Assert.That(renderer.bounds.size.x, Is.EqualTo(collider.bounds.size.x).Within(0.01f),
+                        $"{platform.name} visual width must match its collision width.");
+                    Assert.That(renderer.bounds.size.y, Is.EqualTo(collider.bounds.size.y).Within(0.01f),
+                        $"{platform.name} visual height must match its collision height.");
+                }
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@
   <Project Path="Game.Collectibles.csproj" />
   <Project Path="Game.Collectibles.Tests.EditMode.csproj" />
   <Project Path="Game.Player.csproj" />
+  <Project Path="Game.Infrastructure.Tests.EditMode.csproj" />
   <Project Path="Game.Core.csproj" />
   <Project Path="Game.Tests.PlayMode.csproj" />
   <Project Path="Game.Player.Tests.EditMode.csproj" />
