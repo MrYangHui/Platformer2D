@@ -1,0 +1,14 @@
+{
+  "name": "Game.Level.Tests.EditMode",
+  "rootNamespace": "SnowbreakFan.Level.Tests",
+  "references": [
+    "Game.Level"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

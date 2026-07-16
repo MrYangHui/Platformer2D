@@ -1,0 +1,14 @@
+{
+  "name": "Game.Collectibles.Tests.EditMode",
+  "rootNamespace": "SnowbreakFan.Collectibles.Tests",
+  "references": [
+    "Game.Collectibles"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

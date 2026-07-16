@@ -1,0 +1,8 @@
+{
+  "name": "Game.Collectibles",
+  "rootNamespace": "SnowbreakFan.Collectibles",
+  "references": [
+    "Game.Core"
+  ],
+  "autoReferenced": true
+}

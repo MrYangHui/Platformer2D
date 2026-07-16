@@ -1,0 +1,6 @@
+{
+  "name": "Game.Core",
+  "rootNamespace": "SnowbreakFan.Core",
+  "references": [],
+  "autoReferenced": true
+}

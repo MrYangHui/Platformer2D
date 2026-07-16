@@ -1,0 +1,11 @@
+{
+  "name": "Game.Presentation",
+  "rootNamespace": "SnowbreakFan.Presentation",
+  "references": [
+    "Game.Player",
+    "Game.Level",
+    "Game.Collectibles",
+    "Unity.TextMeshPro"
+  ],
+  "autoReferenced": true
+}

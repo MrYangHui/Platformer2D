@@ -1,0 +1,15 @@
+{
+  "name": "Game.Tests.PlayMode",
+  "rootNamespace": "SnowbreakFan.Tests.PlayMode",
+  "references": [
+    "Game.Infrastructure",
+    "Game.Player",
+    "Game.Level",
+    "Game.Collectibles",
+    "Game.Presentation"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

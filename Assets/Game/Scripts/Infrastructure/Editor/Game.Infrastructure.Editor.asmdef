@@ -1,0 +1,11 @@
+{
+  "name": "Game.Infrastructure.Editor",
+  "rootNamespace": "SnowbreakFan.Infrastructure.Editor",
+  "references": [
+    "Game.Infrastructure"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": true
+}

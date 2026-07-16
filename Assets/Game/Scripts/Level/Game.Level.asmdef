@@ -1,0 +1,8 @@
+{
+  "name": "Game.Level",
+  "rootNamespace": "SnowbreakFan.Level",
+  "references": [
+    "Game.Core"
+  ],
+  "autoReferenced": true
+}
