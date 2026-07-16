@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using SnowbreakFan.Level;
+using SnowbreakFan.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -93,6 +95,75 @@ namespace SnowbreakFan.Tests.PlayMode
                     Assert.That(renderer.bounds.size.y, Is.EqualTo(collider.bounds.size.y).Within(0.01f),
                         $"{platform.name} visual height must match its collision height.");
                 }
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Chunk02OneWayChainFitsConfiguredJumpEnvelope()
+        {
+            yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
+            Physics2D.SyncTransforms();
+
+            LevelChunk2D chunk = Object.FindObjectsByType<LevelChunk2D>(FindObjectsSortMode.None)
+                .Single(item => item.name == "Chunk_02_Gaps");
+            PlayerMovementConfig config = Resources.FindObjectsOfTypeAll<PlayerMovementConfig>()
+                .Single(item => item.name == "PlayerMovementConfig");
+
+            BoxCollider2D[] platforms = chunk.transform.Find("Platforms")
+                .Cast<Transform>()
+                .Select(item => item.GetComponent<BoxCollider2D>())
+                .Where(item => item != null)
+                .ToArray();
+
+            int oneWayLayer = LayerMask.NameToLayer("OneWayPlatform");
+            int groundLayer = LayerMask.NameToLayer("Ground");
+            BoxCollider2D[] oneWayPlatforms = platforms
+                .Where(item => item.gameObject.layer == oneWayLayer)
+                .OrderBy(item => item.bounds.center.x)
+                .ToArray();
+            BoxCollider2D[] groundPlatforms = platforms
+                .Where(item => item.gameObject.layer == groundLayer)
+                .ToArray();
+
+            Assert.That(oneWayPlatforms, Has.Length.EqualTo(3));
+
+            BoxCollider2D sourceGround = groundPlatforms
+                .Where(item => item.bounds.max.x <= oneWayPlatforms[0].bounds.min.x)
+                .OrderByDescending(item => item.bounds.max.x)
+                .First();
+            BoxCollider2D destinationGround = groundPlatforms
+                .Where(item => item.bounds.min.x >= oneWayPlatforms[^1].bounds.max.x)
+                .OrderBy(item => item.bounds.min.x)
+                .First();
+
+            var route = new List<BoxCollider2D> { sourceGround };
+            route.AddRange(oneWayPlatforms);
+            route.Add(destinationGround);
+
+            float risingGravity = Mathf.Abs(Physics2D.gravity.y) * config.GravityScale;
+            float fallingGravity = risingGravity * config.FallGravityMultiplier;
+            float maximumRise = config.JumpSpeed * config.JumpSpeed / (2f * risingGravity);
+            float timeToApex = config.JumpSpeed / risingGravity;
+            const float horizontalSafetyFactor = 0.85f;
+
+            for (int index = 0; index < route.Count - 1; index++)
+            {
+                BoxCollider2D source = route[index];
+                BoxCollider2D destination = route[index + 1];
+                float heightDelta = destination.bounds.max.y - source.bounds.max.y;
+
+                Assert.That(heightDelta, Is.LessThanOrEqualTo(maximumRise),
+                    $"Transition at x={source.bounds.center.x:0.##} -> {destination.bounds.center.x:0.##} " +
+                    $"rises {heightDelta:0.##}, above the configured maximum {maximumRise:0.##}.");
+
+                float fallingTime = Mathf.Sqrt(2f * (maximumRise - heightDelta) / fallingGravity);
+                float safeHorizontalRange = config.MaxSpeed * (timeToApex + fallingTime) * horizontalSafetyFactor;
+                float requiredHorizontalRange = Mathf.Max(0f, destination.bounds.min.x - source.bounds.max.x);
+
+                Assert.That(requiredHorizontalRange, Is.LessThanOrEqualTo(safeHorizontalRange),
+                    $"Transition at x={source.bounds.center.x:0.##} -> {destination.bounds.center.x:0.##} " +
+                    $"needs {requiredHorizontalRange:0.##} horizontal units, above the safe configured range " +
+                    $"{safeHorizontalRange:0.##}.");
             }
         }
     }
