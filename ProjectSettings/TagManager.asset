@@ -12,9 +12,9 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
-  - 
-  - 
+  - Ground
+  - OneWayPlatform
+  - GameplayTrigger
   - 
   - 
   - 
@@ -40,6 +40,30 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BackgroundFar
+    uniqueID: 11001
+    locked: 0
+  - name: BackgroundMid
+    uniqueID: 11002
+    locked: 0
+  - name: BackgroundNear
+    uniqueID: 11003
+    locked: 0
+  - name: Terrain
+    uniqueID: 11004
+    locked: 0
+  - name: Gameplay
+    uniqueID: 11005
+    locked: 0
+  - name: Player
+    uniqueID: 11006
+    locked: 0
+  - name: Foreground
+    uniqueID: 11007
+    locked: 0
+  - name: UIWorld
+    uniqueID: 11008
     locked: 0
   m_RenderingLayers:
   - Default
