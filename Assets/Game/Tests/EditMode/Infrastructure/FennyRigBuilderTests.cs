@@ -6,6 +6,7 @@ using System.Reflection;
 using NUnit.Framework;
 using SnowbreakFan.Infrastructure.Editor;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace SnowbreakFan.Infrastructure.Tests
@@ -162,6 +163,181 @@ namespace SnowbreakFan.Infrastructure.Tests
                     fieldName,
                     BindingFlags.Instance | BindingFlags.NonPublic), Is.Not.Null);
             }
+        }
+
+        [Test]
+        public void RigAnimationAssetsUseContinuousTransformCurvesWithoutScalePulse()
+        {
+            const string folder = "Assets/Game/Animations/Player";
+            AnimationClip idle = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                $"{folder}/Fenny_Idle.anim");
+            AnimationClip run = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                $"{folder}/Fenny_Run.anim");
+            AnimationClip airborne = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                $"{folder}/Fenny_Airborne.anim");
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                $"{folder}/Fenny_Rig.controller");
+
+            Assert.That(idle, Is.Not.Null);
+            Assert.That(run, Is.Not.Null);
+            Assert.That(airborne, Is.Not.Null);
+            Assert.That(controller, Is.Not.Null);
+            Assert.That(AnimationUtility.GetAnimationClipSettings(idle).loopTime, Is.True);
+            Assert.That(AnimationUtility.GetAnimationClipSettings(run).loopTime, Is.True);
+            Assert.That(run.length, Is.EqualTo(0.55f).Within(0.01f));
+
+            AnimatorControllerParameter[] parameters = controller.parameters;
+            Assert.That(parameters.Single(item => item.name == "IsRunning").type,
+                Is.EqualTo(AnimatorControllerParameterType.Bool));
+            Assert.That(parameters.Single(item => item.name == "IsAirborne").type,
+                Is.EqualTo(AnimatorControllerParameterType.Bool));
+            Assert.That(parameters.Single(item => item.name == "RunSpeed").type,
+                Is.EqualTo(AnimatorControllerParameterType.Float));
+            Assert.That(controller.layers[0].stateMachine.states
+                    .Select(item => item.state.name),
+                Is.EquivalentTo(new[] { "Idle", "Run", "Airborne" }));
+
+            AnimationClip[] clips = { idle, run, airborne };
+            Assert.That(clips.SelectMany(AnimationUtility.GetCurveBindings)
+                    .Any(binding => binding.propertyName.Contains("m_LocalScale")),
+                Is.False);
+
+            string[] requiredRunPaths =
+            {
+                "Hip", "Hip/Chest",
+                "Hip/NearThigh", "Hip/NearThigh/NearShin",
+                "Hip/FarThigh", "Hip/FarThigh/FarShin",
+                "Hip/Chest/NearUpperArm", "Hip/Chest/FarUpperArm",
+                "Hip/Chest/Neck/NearPonyUpper",
+                "Hip/Chest/Neck/FarPonyUpper"
+            };
+            string[] runPaths = AnimationUtility.GetCurveBindings(run)
+                .Select(binding => binding.path)
+                .Distinct()
+                .ToArray();
+            Assert.That(requiredRunPaths.All(path => runPaths.Contains(path)), Is.True);
+        }
+
+        [Test]
+        public void RigBuilderCanRenderSampledAnimationPhase()
+        {
+            MethodInfo renderAnimationPreview = typeof(FennyRigBuilder).GetMethod(
+                "RenderAnimationPreview",
+                BindingFlags.Public | BindingFlags.Static);
+            Assert.That(renderAnimationPreview, Is.Not.Null);
+
+            const string outputPath =
+                "TestResults/FennyRigPreviews/RunQuarter.png";
+            renderAnimationPreview.Invoke(
+                null,
+                new object[]
+                {
+                    "Assets/Game/Animations/Player/Fenny_Run.anim",
+                    0.1375f,
+                    outputPath,
+                    false
+                });
+            Assert.That(File.Exists(outputPath), Is.True);
+
+            Texture2D preview = new(2, 2);
+            try
+            {
+                Assert.That(preview.LoadImage(File.ReadAllBytes(outputPath)), Is.True);
+                int visiblePixels = preview.GetPixels32().Count(pixel =>
+                    pixel.r > 35 || pixel.g > 35 || pixel.b > 45);
+                Assert.That(visiblePixels, Is.GreaterThan(5000));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(preview);
+            }
+        }
+
+        [Test]
+        public void RigPartPivotsMatchPaintedJointEdges()
+        {
+            Dictionary<string, float> expectedPivotY = new()
+            {
+                ["Head"] = 82f / 384f,
+                ["RearHair"] = 0.5f,
+                ["NearPonyUpper"] = 308f / 384f,
+                ["NearPonyLower"] = 312f / 384f,
+                ["FarPonyUpper"] = 308f / 384f,
+                ["FarPonyLower"] = 307f / 384f,
+                ["Torso"] = 70f / 384f,
+                ["Pelvis"] = 130f / 384f,
+                ["FrontSkirt"] = 296f / 384f,
+                ["RearSkirt"] = 288f / 384f,
+                ["Backpack"] = 0.5f,
+                ["NearUpperArm"] = 310f / 384f,
+                ["NearForearmHand"] = 322f / 384f,
+                ["FarUpperArm"] = 304f / 384f,
+                ["FarForearmHand"] = 329f / 384f,
+                ["RedThigh"] = 328f / 384f,
+                ["RedShin"] = 324f / 384f,
+                ["RedBoot"] = 294f / 384f,
+                ["BareThigh"] = 323f / 384f,
+                ["BareShin"] = 326f / 384f,
+                ["BareBoot"] = 291f / 384f
+            };
+
+            Dictionary<string, Sprite> sprites = AssetDatabase
+                .LoadAllAssetsAtPath(PartsPath)
+                .OfType<Sprite>()
+                .ToDictionary(sprite => sprite.name);
+            foreach ((string partName, float expected) in expectedPivotY)
+            {
+                float normalizedPivot =
+                    sprites[partName].pivot.y / sprites[partName].rect.height;
+                Assert.That(normalizedPivot,
+                    Is.EqualTo(expected).Within(0.005f),
+                    partName);
+            }
+            Assert.That(sprites.Values.All(sprite => sprite.pixelsPerUnit == 512f),
+                Is.True);
+        }
+
+        [Test]
+        public void RunGaitUsesShortStrideAndOverlappingLegJoints()
+        {
+            AnimationClip run = AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                "Assets/Game/Animations/Player/Fenny_Run.anim");
+            Assert.That(run, Is.Not.Null);
+
+            string[] thighPaths = { "Hip/NearThigh", "Hip/FarThigh" };
+            string[] shinPaths =
+            {
+                "Hip/NearThigh/NearShin",
+                "Hip/FarThigh/FarShin"
+            };
+            foreach (EditorCurveBinding binding in AnimationUtility.GetCurveBindings(run))
+            {
+                if (binding.propertyName != "localEulerAnglesRaw.z")
+                    continue;
+
+                float maxAngle = AnimationUtility.GetEditorCurve(run, binding)
+                    .keys
+                    .Max(key => Mathf.Abs(key.value));
+                if (thighPaths.Contains(binding.path))
+                    Assert.That(maxAngle, Is.LessThanOrEqualTo(25f), binding.path);
+                if (shinPaths.Contains(binding.path))
+                    Assert.That(maxAngle, Is.LessThanOrEqualTo(45f), binding.path);
+            }
+
+            GameObject rig = AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/Game/Prefabs/Player/FennyVisualRig.prefab");
+            Transform hip = rig.transform.Find("Hip");
+            Assert.That(hip.localPosition.y, Is.LessThanOrEqualTo(-0.18f));
+            string[] jointPaths =
+            {
+                "Hip/NearThigh/NearShin",
+                "Hip/NearThigh/NearShin/NearBoot",
+                "Hip/FarThigh/FarShin",
+                "Hip/FarThigh/FarShin/FarBoot"
+            };
+            foreach (string path in jointPaths)
+                Assert.That(Mathf.Abs(rig.transform.Find(path).localPosition.y),
+                    Is.LessThanOrEqualTo(0.31f), path);
         }
     }
 }

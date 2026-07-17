@@ -217,9 +217,9 @@ Run `FennyRigBuilderTests` to `TestResults/FennyRigStaticRed.xml`. Expected: com
 
 - [ ] **Step 3: Implement deterministic atlas slicing**
 
-Create `FennyRigBuilder.cs` with constants for the atlas, rig prefab, animation folder, Player prefab, `CellWidth = 256`, `CellHeight = 384`, `Columns = 7`, and `PixelsPerUnit = 600f`.
+Create `FennyRigBuilder.cs` with constants for the atlas, rig prefab, animation folder, Player prefab, `CellWidth = 256`, `CellHeight = 384`, `Columns = 7`, and `PixelsPerUnit = 512f`.
 
-`ConfigureAtlas()` sets Sprite Multiple mode, `600` pixels per unit, bilinear filtering, no mipmaps, alpha transparency, FullRect meshes, and 21 `SpriteRect` entries through Unity's Sprite Editor Data Provider API. The measured alpha bounds at 600 PPU produce an approximately 1.84-world-unit character while retaining the 0.1-unit sole overlap. Use row-major cell coordinates and semantic names. Assign joint-oriented pivots:
+`ConfigureAtlas()` sets Sprite Multiple mode, `512` pixels per unit, bilinear filtering, no mipmaps, alpha transparency, FullRect meshes, and 21 `SpriteRect` entries through Unity's Sprite Editor Data Provider API. Exact alpha-edge pivots provide stable joint placement while the compact hierarchy spacing deliberately overlaps rigid limb pieces to conceal sockets. Use row-major cell coordinates and semantic names. Assign joint-oriented pivots:
 
 - bottom-center `(0.5, 0.08)` for Head, Torso, and Pelvis;
 - top-center `(0.5, 0.92)` for ponytail segments, skirts, arms, thighs, shins, and boots;
