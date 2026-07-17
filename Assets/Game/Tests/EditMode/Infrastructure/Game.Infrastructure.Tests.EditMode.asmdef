@@ -2,7 +2,8 @@
   "name": "Game.Infrastructure.Tests.EditMode",
   "rootNamespace": "SnowbreakFan.Infrastructure.Tests",
   "references": [
-    "Game.Infrastructure.Editor"
+    "Game.Infrastructure.Editor",
+    "Game.Presentation"
   ],
   "includePlatforms": [
     "Editor"
