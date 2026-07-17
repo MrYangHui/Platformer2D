@@ -101,6 +101,23 @@ namespace SnowbreakFan.Tests.PlayMode
             Assert.That(renderer.sprite.name, Does.StartWith("Fenny_Idle_"));
             Assert.That(renderer.flipX, Is.True);
 
+            Sprite stationary = renderer.sprite;
+            Vector3 stationaryPosition = visual.localPosition;
+            Quaternion stationaryRotation = visual.localRotation;
+            Vector3 stationaryScale = visual.localScale;
+            float stationaryElapsed = 0f;
+            while (stationaryElapsed < 0.6f)
+            {
+                yield return null;
+                stationaryElapsed += Time.unscaledDeltaTime;
+                Assert.That(renderer.sprite, Is.SameAs(stationary));
+                Assert.That(visual.localPosition, Is.EqualTo(stationaryPosition)
+                    .Using(Vector3ComparerWithEqualsOperator.Instance));
+                Assert.That(visual.localRotation, Is.EqualTo(stationaryRotation));
+                Assert.That(visual.localScale, Is.EqualTo(stationaryScale)
+                    .Using(Vector3ComparerWithEqualsOperator.Instance));
+            }
+
             SetMotorState(motor, PlayerMotionState.Rising);
             body.linearVelocity = new Vector2(0f, 0.2f);
             yield return null;

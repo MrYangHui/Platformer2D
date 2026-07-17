@@ -123,7 +123,7 @@ namespace SnowbreakFan.Infrastructure.Editor
                 throw new UnityException("Fenny frame atlas does not contain all semantic frames.");
 
             SerializedObject serialized = new(profile);
-            AssignFrames(serialized.FindProperty("idleFrames"), FrameNames.Take(4), sprites);
+            AssignFrames(serialized.FindProperty("idleFrames"), FrameNames.Take(1), sprites);
             AssignFrames(serialized.FindProperty("runFrames"), FrameNames.Skip(4).Take(8), sprites);
             serialized.FindProperty("risingFrame").objectReferenceValue = sprites["Fenny_Rising"];
             serialized.FindProperty("apexFrame").objectReferenceValue = sprites["Fenny_Apex"];

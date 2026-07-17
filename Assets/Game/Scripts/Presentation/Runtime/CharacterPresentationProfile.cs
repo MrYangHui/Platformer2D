@@ -37,9 +37,9 @@ namespace SnowbreakFan.Presentation
 
         public bool TryValidate(out string error)
         {
-            if (idleFrames == null || idleFrames.Length < 2 || idleFrames.Any(frame => frame == null))
+            if (idleFrames == null || idleFrames.Length < 1 || idleFrames.Any(frame => frame == null))
             {
-                error = "Idle requires at least two complete frames.";
+                error = "Idle requires at least one complete frame.";
                 return false;
             }
 

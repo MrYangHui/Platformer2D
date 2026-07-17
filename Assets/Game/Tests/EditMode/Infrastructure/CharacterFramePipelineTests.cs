@@ -56,6 +56,18 @@ namespace SnowbreakFan.Infrastructure.Tests
         }
 
         [Test]
+        public void ProfileAcceptsSingleCompleteIdleFrame()
+        {
+            CharacterPresentationProfile profile = CreateValidProfile();
+            SerializedObject serialized = new(profile);
+            serialized.FindProperty("idleFrames").arraySize = 1;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            Assert.That(profile.TryValidate(out string error), Is.True, error);
+            Assert.That(profile.IdleFrames.Count, Is.EqualTo(1));
+        }
+
+        [Test]
         public void ProfileRejectsInvalidTimingScaleAndRootCoordinates()
         {
             CharacterPresentationProfile profile = CreateValidProfile();
@@ -179,7 +191,7 @@ namespace SnowbreakFan.Infrastructure.Tests
                 AssetDatabase.LoadAssetAtPath<CharacterPresentationProfile>(ProfilePath);
             Assert.That(profile, Is.Not.Null);
             Assert.That(profile.TryValidate(out string error), Is.True, error);
-            Assert.That(profile.IdleFrames.Count, Is.EqualTo(4));
+            Assert.That(profile.IdleFrames.Count, Is.EqualTo(1));
             Assert.That(profile.RunFrames.Count, Is.EqualTo(8));
             Assert.That(profile.RisingFrame.name, Is.EqualTo("Fenny_Rising"));
             Assert.That(profile.ApexFrame.name, Is.EqualTo("Fenny_Apex"));

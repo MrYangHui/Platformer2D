@@ -14,9 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game.Presentation::SnowbreakFan.Presentation.CharacterPresentationProfile
   idleFrames:
   - {fileID: -713690151, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: 261310557, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: 979082118, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: 1987255828, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
   runFrames:
   - {fileID: -152621632, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
   - {fileID: 227043602, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
