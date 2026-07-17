@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SnowbreakFan.Player;
 using UnityEngine;
 
@@ -25,7 +24,7 @@ namespace SnowbreakFan.Presentation
         private PresentationState currentState;
         private bool hasCurrentState;
         private bool facingRight = true;
-        private float elapsed;
+        private readonly FramePlaybackClock playbackClock = new();
 
         private void Awake()
         {
@@ -58,14 +57,36 @@ namespace SnowbreakFan.Presentation
             PresentationState state = ResolveState(absoluteHorizontalSpeed);
             if (!hasCurrentState || state != currentState)
             {
-                elapsed = 0f;
+                playbackClock.Reset();
                 currentState = state;
                 hasCurrentState = true;
             }
+            else
+            {
+                AdvancePlayback(state, absoluteHorizontalSpeed);
+            }
 
-            elapsed += Time.deltaTime;
-            targetRenderer.sprite = ResolveFrame(state, elapsed, absoluteHorizontalSpeed) ??
+            targetRenderer.sprite = ResolveFrame(state) ??
                                     profile.FallbackFrame;
+        }
+
+        private void AdvancePlayback(PresentationState state, float absoluteHorizontalSpeed)
+        {
+            switch (state)
+            {
+                case PresentationState.Idle:
+                    playbackClock.Advance(Time.deltaTime, profile.IdleFramesPerSecond);
+                    break;
+                case PresentationState.Run:
+                    float speedMultiplier = Mathf.Clamp(
+                        absoluteHorizontalSpeed / profile.ReferenceRunSpeed,
+                        0.75f,
+                        1.35f);
+                    playbackClock.Advance(
+                        Time.deltaTime,
+                        profile.RunFramesPerSecond * speedMultiplier);
+                    break;
+            }
         }
 
         private PresentationState ResolveState(float absoluteHorizontalSpeed)
@@ -84,27 +105,14 @@ namespace SnowbreakFan.Presentation
                 : PresentationState.Falling;
         }
 
-        private Sprite ResolveFrame(
-            PresentationState state,
-            float stateElapsed,
-            float absoluteHorizontalSpeed)
+        private Sprite ResolveFrame(PresentationState state)
         {
             switch (state)
             {
                 case PresentationState.Idle:
-                    return ResolveLoopFrame(
-                        profile.IdleFrames,
-                        stateElapsed,
-                        profile.IdleFramesPerSecond);
+                    return ResolveLoopFrame(profile.IdleFrames);
                 case PresentationState.Run:
-                    float speedMultiplier = Mathf.Clamp(
-                        absoluteHorizontalSpeed / profile.ReferenceRunSpeed,
-                        0.75f,
-                        1.35f);
-                    return ResolveLoopFrame(
-                        profile.RunFrames,
-                        stateElapsed,
-                        profile.RunFramesPerSecond * speedMultiplier);
+                    return ResolveLoopFrame(profile.RunFrames);
                 case PresentationState.Rising:
                     return profile.RisingFrame;
                 case PresentationState.Apex:
@@ -116,14 +124,11 @@ namespace SnowbreakFan.Presentation
             }
         }
 
-        private static Sprite ResolveLoopFrame(
-            IReadOnlyList<Sprite> frames,
-            float stateElapsed,
-            float framesPerSecond)
+        private Sprite ResolveLoopFrame(System.Collections.Generic.IReadOnlyList<Sprite> frames)
         {
             if (frames == null || frames.Count == 0)
                 return null;
-            int index = Mathf.FloorToInt(stateElapsed * framesPerSecond) % frames.Count;
+            int index = playbackClock.CurrentIndex(frames.Count);
             return frames[index];
         }
     }

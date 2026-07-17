@@ -173,6 +173,50 @@ namespace SnowbreakFan.Infrastructure.Tests
         }
 
         [Test]
+        public void RunPhaseDoesNotReinterpretHistoryWhenSpeedDrops()
+        {
+            FramePlaybackClock clock = new();
+            for (int index = 0; index < 60; index++)
+                clock.Advance(1f / 60f, 16f);
+            int before = clock.CurrentIndex(8);
+
+            clock.Advance(1f / 60f, 12.266667f);
+            int after = clock.CurrentIndex(8);
+
+            Assert.That(before, Is.EqualTo(0));
+            Assert.That(after, Is.EqualTo(0).Or.EqualTo(1));
+        }
+
+        [Test]
+        public void PlaybackClockTraversesThreeCyclesInOrder()
+        {
+            FramePlaybackClock clock = new();
+            List<int> changed = new() { clock.CurrentIndex(8) };
+            int previous = changed[0];
+            for (int tick = 0; tick < 180; tick++)
+            {
+                clock.Advance(1f / 120f, 16f);
+                int current = clock.CurrentIndex(8);
+                if (current == previous)
+                    continue;
+                changed.Add(current);
+                previous = current;
+            }
+            Assert.That(changed.Take(25), Is.EqualTo(
+                Enumerable.Range(0, 24).Select(index => index % 8).Append(0)));
+        }
+
+        [Test]
+        public void PlaybackClockResetReturnsToFrameZero()
+        {
+            FramePlaybackClock clock = new();
+            clock.Advance(0.25f, 16f);
+            Assert.That(clock.CurrentIndex(8), Is.EqualTo(4));
+            clock.Reset();
+            Assert.That(clock.CurrentIndex(8), Is.Zero);
+        }
+
+        [Test]
         public void ConfiguratorCreatesSemanticAtlasProfileAndStablePlayerPresentation()
         {
             FennyFrameConfigurator.Configure();
