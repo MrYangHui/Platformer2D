@@ -13,7 +13,7 @@ namespace SnowbreakFan.Infrastructure.Tests
     public sealed class CharacterFramePipelineTests
     {
         private const string AtlasPath =
-            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v007.png";
+            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v008.png";
         private const string ProfilePath =
             "Assets/Game/Config/Characters/FennyGoldenPresentation.asset";
         private const string PlayerPrefabPath =
@@ -311,6 +311,21 @@ namespace SnowbreakFan.Infrastructure.Tests
                 Is.True);
             Assert.That(sprites.All(sprite => sprite.pixelsPerUnit == 480f), Is.True);
             Assert.That(sprites.All(sprite => sprite.pivot == new Vector2(384f, 0f)), Is.True);
+            Assert.That(sprites.Select(sprite => sprite.name), Is.EqualTo(new[]
+            {
+                "Fenny_Apex",
+                "Fenny_Falling",
+                "Fenny_Idle_00",
+                "Fenny_Rising",
+                "Fenny_Run_00",
+                "Fenny_Run_01",
+                "Fenny_Run_02",
+                "Fenny_Run_03",
+                "Fenny_Run_04",
+                "Fenny_Run_05",
+                "Fenny_Run_06",
+                "Fenny_Run_07"
+            }));
 
             CharacterPresentationProfile profile =
                 AssetDatabase.LoadAssetAtPath<CharacterPresentationProfile>(ProfilePath);
@@ -318,9 +333,17 @@ namespace SnowbreakFan.Infrastructure.Tests
             Assert.That(profile.TryValidate(out string error), Is.True, error);
             Assert.That(profile.IdleFrames.Count, Is.EqualTo(1));
             Assert.That(profile.RunFrames.Count, Is.EqualTo(8));
+            Assert.That(profile.IdleFrames.Single().name, Is.EqualTo("Fenny_Idle_00"));
+            Assert.That(profile.RunFrames.Select(sprite => sprite.name), Is.EqualTo(
+                Enumerable.Range(0, 8).Select(index => $"Fenny_Run_{index:00}")));
             Assert.That(profile.RisingFrame.name, Is.EqualTo("Fenny_Rising"));
             Assert.That(profile.ApexFrame.name, Is.EqualTo("Fenny_Apex"));
             Assert.That(profile.FallingFrame.name, Is.EqualTo("Fenny_Falling"));
+            Assert.That(
+                profile.IdleFrames.Concat(profile.RunFrames)
+                    .Concat(new[] { profile.RisingFrame, profile.ApexFrame, profile.FallingFrame })
+                    .All(sprite => AssetDatabase.GetAssetPath(sprite) == AtlasPath),
+                Is.True);
             Assert.That(profile.IdleFramesPerSecond, Is.EqualTo(4f));
             Assert.That(profile.RunFramesPerSecond, Is.EqualTo(16f));
             Assert.That(profile.ReferenceRunSpeed, Is.EqualTo(6f));

@@ -258,7 +258,7 @@ Run_06 [158,377]
 Run_07 [126,375]
 ```
 
-Set `destination_visual_core_x` to `380` on all eight Run frames. Set pelvis destination Y values to `440,432,436,444,440,432,436,444`; preserve each destination X only as the anatomical fallback value `384`. Use generic budgets `x_anchor=visual_core`, `y_anchor=pelvis`, `max_x_span=4`, `max_x_step=4`, `max_y_span=12`, `max_y_step=8`.
+Set `destination_visual_core_x` to `385` on the Run frames, with a two-pixel perceptual correction to `387` for `Run_06`. The original measured target of `380` placed Run_04 five pixels outside the 768-pixel cell after the fixed `430/143` normalization scale; using `385` preserves every source pixel and keeps the visual core within one pixel of the `384` pivot. The `Run_06` correction raises the fixed-band `Run_05 → Run_06` head IoU above the `0.85` gate while keeping the cycle X span/step at `2 px`, inside the `4 px` budget. Set pelvis destination Y values to `440,432,436,444,440,432,436,444`; preserve each destination X only as the anatomical fallback value `384`. Use generic budgets `x_anchor=visual_core`, `y_anchor=pelvis`, `max_x_span=4`, `max_x_step=4`, `max_y_span=12`, `max_y_step=8`.
 
 - [ ] **Step 2: Normalize v008 and render the contact sheet**
 

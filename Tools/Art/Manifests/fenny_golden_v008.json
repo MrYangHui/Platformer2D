@@ -1,0 +1,147 @@
+{
+  "cell_size": [768, 1024],
+  "atlas_columns": 4,
+  "atlas_rows": 3,
+  "sole_line": 48,
+  "canonical_head_pelvis": 430,
+  "output_atlas": "../../../Assets/Game/Art/Characters/Player/FennyGolden_Frames_v008.png",
+  "sources": {
+    "idle_v003": {
+      "path": "../../../Assets/Game/Art/Characters/Player/FennyGolden_IdlePoses_Candidate_v003.png",
+      "cell_size": [418, 941],
+      "columns": 4,
+      "expected_head_pelvis": 400,
+      "keep_largest_component": true
+    },
+    "run_v007": {
+      "path": "../../../Assets/Game/Art/Characters/Player/FennyGolden_RunCycle_Candidate_v007.png",
+      "cell_size": [384, 512],
+      "columns": 4,
+      "expected_head_pelvis": 143,
+      "keep_largest_component": true
+    },
+    "airborne_v006": {
+      "path": "../../../Assets/Game/Art/Characters/Player/FennyGolden_AirbornePhases_Candidate_v006.png",
+      "cell_size": [512, 1024],
+      "columns": 3,
+      "expected_head_pelvis": 350
+    }
+  },
+  "motion_groups": [
+    {
+      "name": "Run",
+      "frames": ["Run_00", "Run_01", "Run_02", "Run_03", "Run_04", "Run_05", "Run_06", "Run_07"],
+      "x_anchor": "visual_core",
+      "y_anchor": "pelvis",
+      "max_x_span": 4,
+      "max_x_step": 4,
+      "max_y_span": 12,
+      "max_y_step": 8
+    }
+  ],
+  "frames": [
+    {
+      "name": "Idle_00",
+      "source": "idle_v003",
+      "cell": [0, 0],
+      "alignment": "grounded",
+      "anchors": {"sole": [266, 62], "pelvis": [270, 470], "head": [270, 870]}
+    },
+    {
+      "name": "Run_00",
+      "source": "run_v007",
+      "cell": [0, 0],
+      "alignment": "airborne",
+      "destination_anchor": [384, 440],
+      "destination_visual_core_x": 385,
+      "anchors": {"sole": [343, 73], "pelvis": [270, 205], "head": [280, 346], "visual_core": [277, 284]}
+    },
+    {
+      "name": "Run_01",
+      "source": "run_v007",
+      "cell": [1, 0],
+      "alignment": "airborne",
+      "destination_anchor": [384, 432],
+      "destination_visual_core_x": 385,
+      "anchors": {"sole": [201, 73], "pelvis": [210, 194], "head": [226, 334], "visual_core": [219, 271]}
+    },
+    {
+      "name": "Run_02",
+      "source": "run_v007",
+      "cell": [2, 0],
+      "alignment": "airborne",
+      "destination_anchor": [384, 436],
+      "destination_visual_core_x": 385,
+      "anchors": {"sole": [163, 78], "pelvis": [172, 203], "head": [180, 345], "visual_core": [165, 281]}
+    },
+    {
+      "name": "Run_03",
+      "source": "run_v007",
+      "cell": [3, 0],
+      "alignment": "airborne",
+      "destination_anchor": [384, 444],
+      "destination_visual_core_x": 385,
+      "anchors": {"sole": [105, 96], "pelvis": [131, 204], "head": [139, 344], "visual_core": [129, 281]}
+    },
+    {
+      "name": "Run_04",
+      "source": "run_v007",
+      "cell": [0, 1],
+      "alignment": "airborne",
+      "destination_anchor": [384, 440],
+      "destination_visual_core_x": 385,
+      "anchors": {"sole": [319, 190], "pelvis": [263, 305], "head": [274, 451], "visual_core": [265, 384]}
+    },
+    {
+      "name": "Run_05",
+      "source": "run_v007",
+      "cell": [1, 1],
+      "alignment": "airborne",
+      "destination_anchor": [384, 432],
+      "destination_visual_core_x": 385,
+      "anchors": {"sole": [158, 181], "pelvis": [211, 301], "head": [225, 440], "visual_core": [211, 378]}
+    },
+    {
+      "name": "Run_06",
+      "source": "run_v007",
+      "cell": [2, 1],
+      "alignment": "airborne",
+      "destination_anchor": [384, 436],
+      "destination_visual_core_x": 387,
+      "anchors": {"sole": [177, 181], "pelvis": [171, 299], "head": [179, 440], "visual_core": [158, 377]}
+    },
+    {
+      "name": "Run_07",
+      "source": "run_v007",
+      "cell": [3, 1],
+      "alignment": "airborne",
+      "destination_anchor": [384, 444],
+      "destination_visual_core_x": 385,
+      "anchors": {"sole": [188, 183], "pelvis": [130, 298], "head": [139, 439], "visual_core": [126, 375]}
+    },
+    {
+      "name": "Rising",
+      "source": "airborne_v006",
+      "cell": [0, 0],
+      "alignment": "airborne",
+      "destination_anchor": [384, 505],
+      "anchors": {"sole": [190, 192], "pelvis": [260, 572], "head": [300, 920]}
+    },
+    {
+      "name": "Apex",
+      "source": "airborne_v006",
+      "cell": [1, 0],
+      "alignment": "airborne",
+      "destination_anchor": [384, 505],
+      "anchors": {"sole": [240, 286], "pelvis": [245, 552], "head": [285, 900]}
+    },
+    {
+      "name": "Falling",
+      "source": "airborne_v006",
+      "cell": [2, 0],
+      "alignment": "airborne",
+      "destination_anchor": [384, 505],
+      "anchors": {"sole": [250, 225], "pelvis": [230, 561], "head": [260, 910]}
+    }
+  ]
+}

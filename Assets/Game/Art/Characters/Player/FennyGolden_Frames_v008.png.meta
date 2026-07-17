@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: adf02f5fd6141874da9d2e447064a1b4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7860853598833134742
+    second: FennyGolden_Frames_v008_0
+  - first:
+      213: 5542678148096148682
+    second: FennyGolden_Frames_v008_1
+  - first:
+      213: -2626401055089743450
+    second: FennyGolden_Frames_v008_2
+  - first:
+      213: 9186264019106539268
+    second: FennyGolden_Frames_v008_3
+  - first:
+      213: 2678948433919099606
+    second: FennyGolden_Frames_v008_4
+  - first:
+      213: -6333411926540604181
+    second: FennyGolden_Frames_v008_5
+  - first:
+      213: -6802287949211011374
+    second: FennyGolden_Frames_v008_6
+  - first:
+      213: -8589000451616910226
+    second: FennyGolden_Frames_v008_7
+  - first:
+      213: -3274852206131743636
+    second: FennyGolden_Frames_v008_8
+  - first:
+      213: 6655548810335799680
+    second: FennyGolden_Frames_v008_9
+  - first:
+      213: 2567445196751511548
+    second: FennyGolden_Frames_v008_10
+  - first:
+      213: -2149582360246879723
+    second: FennyGolden_Frames_v008_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_0
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 2095
+        width: 255
+        height: 874
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a63333aec43a8e290800000000000000
+      internalID: -7860853598833134742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_1
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 2078
+        width: 600
+        height: 847
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac44799c86c8bec40800000000000000
+      internalID: 5542678148096148682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_2
+      rect:
+        serializedVersion: 2
+        x: 1658
+        y: 2115
+        width: 420
+        height: 790
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a92aa9d7262d8bd0800000000000000
+      internalID: -2626401055089743450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_3
+      rect:
+        serializedVersion: 2
+        x: 2381
+        y: 2107
+        width: 459
+        height: 811
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4072cc7547a2c7f70800000000000000
+      internalID: 9186264019106539268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_4
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 1136
+        width: 519
+        height: 760
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d2465f28698d2520800000000000000
+      internalID: 2678948433919099606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_5
+      rect:
+        serializedVersion: 2
+        x: 767
+        y: 1090
+        width: 636
+        height: 820
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bec235e98633b18a0800000000000000
+      internalID: -6333411926540604181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_6
+      rect:
+        serializedVersion: 2
+        x: 1719
+        y: 1082
+        width: 354
+        height: 799
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d67b57762b6991a0800000000000000
+      internalID: -6802287949211011374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_7
+      rect:
+        serializedVersion: 2
+        x: 2375
+        y: 1092
+        width: 456
+        height: 802
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6454b1889dbdc880800000000000000
+      internalID: -8589000451616910226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_8
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 73
+        width: 582
+        height: 802
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c64fc99f4436d82d0800000000000000
+      internalID: -3274852206131743636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_9
+      rect:
+        serializedVersion: 2
+        x: 997
+        y: 37
+        width: 390
+        height: 914
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 089c65161624d5c50800000000000000
+      internalID: 6655548810335799680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_10
+      rect:
+        serializedVersion: 2
+        x: 1821
+        y: 178
+        width: 283
+        height: 770
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cff18a4bdc561a320800000000000000
+      internalID: 2567445196751511548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_Frames_v008_11
+      rect:
+        serializedVersion: 2
+        x: 2556
+        y: 91
+        width: 259
+        height: 857
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51af90a7b362b22e0800000000000000
+      internalID: -2149582360246879723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FennyGolden_Frames_v008_0: -7860853598833134742
+      FennyGolden_Frames_v008_1: 5542678148096148682
+      FennyGolden_Frames_v008_10: 2567445196751511548
+      FennyGolden_Frames_v008_11: -2149582360246879723
+      FennyGolden_Frames_v008_2: -2626401055089743450
+      FennyGolden_Frames_v008_3: 9186264019106539268
+      FennyGolden_Frames_v008_4: 2678948433919099606
+      FennyGolden_Frames_v008_5: -6333411926540604181
+      FennyGolden_Frames_v008_6: -6802287949211011374
+      FennyGolden_Frames_v008_7: -8589000451616910226
+      FennyGolden_Frames_v008_8: -3274852206131743636
+      FennyGolden_Frames_v008_9: 6655548810335799680
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
