@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -105,7 +106,7 @@ namespace SnowbreakFan.Infrastructure.Tests
             }
             finally
             {
-                Object.DestroyImmediate(preview);
+                UnityEngine.Object.DestroyImmediate(preview);
             }
         }
 
@@ -139,6 +140,28 @@ namespace SnowbreakFan.Infrastructure.Tests
                 Is.GreaterThanOrEqualTo(0.12f));
             Assert.That(nearUpperArm.localPosition.x - farUpperArm.localPosition.x,
                 Is.GreaterThanOrEqualTo(0.12f));
+        }
+
+        [Test]
+        public void RigPresentationDriverExposesOnlyStateAndFacingDependencies()
+        {
+            Type driver = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType(
+                    "SnowbreakFan.Presentation.PlayerRigPresentation2D"))
+                .SingleOrDefault(type => type != null);
+
+            Assert.That(driver, Is.Not.Null);
+            string[] serializedFields =
+            {
+                "animator", "visualRoot", "body", "motor",
+                "movementThreshold", "referenceRunSpeed"
+            };
+            foreach (string fieldName in serializedFields)
+            {
+                Assert.That(driver.GetField(
+                    fieldName,
+                    BindingFlags.Instance | BindingFlags.NonPublic), Is.Not.Null);
+            }
         }
     }
 }
