@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using NUnit.Framework;
 using SnowbreakFan.Player;
 using SnowbreakFan.Presentation;
@@ -38,24 +39,31 @@ namespace SnowbreakFan.Tests.PlayMode
             PlayerMotor2D motor = Object.FindFirstObjectByType<PlayerMotor2D>();
             Rigidbody2D body = motor.GetComponent<Rigidbody2D>();
             CapsuleCollider2D collider = motor.GetComponent<CapsuleCollider2D>();
-            SpriteRenderer renderer = motor.GetComponentInChildren<SpriteRenderer>();
+            PlayerRigPresentation2D presentation = motor.GetComponent<PlayerRigPresentation2D>();
+            Transform visual = motor.transform.Find("FennyVisualRig");
+            Animator animator = visual != null ? visual.GetComponent<Animator>() : null;
 
-            Assert.That(motor.GetComponent("PlayerSpriteAnimator2D"), Is.Not.Null);
-            Assert.That(renderer.sprite.name, Does.StartWith("FennyGolden_IdlePoses"));
-            Assert.That(renderer.sortingLayerName, Is.EqualTo("Player"));
+            Assert.That(motor.GetComponent<PlayerSpriteAnimator2D>(), Is.Null);
+            Assert.That(presentation, Is.Not.Null);
+            Assert.That(animator, Is.Not.Null);
+            Assert.That(visual.GetComponentsInChildren<SpriteRenderer>(), Has.Length.EqualTo(21));
             Assert.That(body.gravityScale, Is.EqualTo(4f));
             Assert.That(collider.size, Is.EqualTo(new Vector2(0.8f, 1.8f)));
+            Assert.That(visual.Find("GroundContact").localPosition.y,
+                Is.EqualTo(-1f).Within(0.001f));
         }
 
         [UnityTest]
-        public IEnumerator FennyPresentationCyclesRunAndPreservesFacingAtIdle()
+        public IEnumerator FennyRigDrivesRunAirborneAndPreservesFacingAtIdle()
         {
             yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
 
-            PlayerSpriteAnimator2D animator = Object.FindFirstObjectByType<PlayerSpriteAnimator2D>();
-            PlayerMotor2D motor = animator.GetComponent<PlayerMotor2D>();
-            Rigidbody2D body = animator.GetComponent<Rigidbody2D>();
-            SpriteRenderer renderer = animator.GetComponentInChildren<SpriteRenderer>();
+            PlayerRigPresentation2D presentation =
+                Object.FindFirstObjectByType<PlayerRigPresentation2D>();
+            PlayerMotor2D motor = presentation.GetComponent<PlayerMotor2D>();
+            Rigidbody2D body = presentation.GetComponent<Rigidbody2D>();
+            Transform visual = presentation.transform.Find("FennyVisualRig");
+            Animator animator = visual.GetComponent<Animator>();
 
             float timeout = 2f;
             while (motor.State != PlayerMotionState.Grounded && timeout > 0f)
@@ -68,35 +76,35 @@ namespace SnowbreakFan.Tests.PlayMode
             motor.enabled = false;
             body.gravityScale = 0f;
             body.linearVelocity = new Vector2(4f, 0f);
-            Sprite idleFrame = renderer.sprite;
+            yield return null;
 
-            yield return new WaitForSeconds(0.2f);
-
-            Assert.That(renderer.sprite.name, Does.StartWith("FennyGolden_RunPoses"));
-            Assert.That(renderer.sprite, Is.Not.SameAs(idleFrame));
-            Assert.That(renderer.flipX, Is.False);
-            Assert.That(renderer.transform.localPosition.x, Is.LessThan(-0.1f));
+            Assert.That(animator.GetBool("IsRunning"), Is.True);
+            Assert.That(animator.GetBool("IsAirborne"), Is.False);
+            Assert.That(animator.GetFloat("RunSpeed"), Is.EqualTo(4f / 6f).Within(0.01f));
+            Assert.That(visual.localScale, Is.EqualTo(Vector3.one)
+                .Using(Vector3ComparerWithEqualsOperator.Instance));
 
             body.linearVelocity = new Vector2(-4f, 0f);
             yield return null;
-            Assert.That(renderer.flipX, Is.True);
-            Assert.That(renderer.transform.localPosition.x, Is.GreaterThan(0.1f));
+            Assert.That(visual.localScale.x, Is.EqualTo(-1f));
+            Assert.That(visual.localScale.y, Is.EqualTo(1f));
 
             body.linearVelocity = Vector2.zero;
-            yield return new WaitForSeconds(0.3f);
-            Assert.That(renderer.sprite.name, Does.StartWith("FennyGolden_IdlePoses"));
-            Assert.That(renderer.flipX, Is.True);
-            Assert.That(renderer.transform.localPosition,
-                Is.EqualTo(new Vector3(0f, -0.95f, 0f))
-                    .Using(Vector3ComparerWithEqualsOperator.Instance));
+            yield return null;
+            Assert.That(animator.GetBool("IsRunning"), Is.False);
+            Assert.That(visual.localScale.x, Is.EqualTo(-1f));
+            Assert.That(visual.GetComponentsInChildren<Transform>()
+                    .Where(item => item != visual)
+                    .All(item => item.localScale == Vector3.one),
+                Is.True);
 
             typeof(PlayerMotor2D).GetProperty(nameof(PlayerMotor2D.State))
                 .GetSetMethod(true)
                 .Invoke(motor, new object[] { PlayerMotionState.Rising });
             body.linearVelocity = new Vector2(0f, 5f);
             yield return null;
-            Assert.That(renderer.sprite.name,
-                Does.StartWith("FennyGolden_Airborne_Candidate_v004"));
+            Assert.That(animator.GetBool("IsAirborne"), Is.True);
+            Assert.That(animator.GetBool("IsRunning"), Is.False);
         }
     }
 }

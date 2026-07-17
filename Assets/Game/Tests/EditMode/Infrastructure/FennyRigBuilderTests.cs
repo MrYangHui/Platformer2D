@@ -339,5 +339,28 @@ namespace SnowbreakFan.Infrastructure.Tests
                 Assert.That(Mathf.Abs(rig.transform.Find(path).localPosition.y),
                     Is.LessThanOrEqualTo(0.31f), path);
         }
+
+        [Test]
+        public void RepeatedBuildPreservesAnimatorStateObjects()
+        {
+            FennyRigBuilder.Build();
+            AnimatorController first = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                FennyRigBuilder.ControllerPath);
+            Dictionary<string, int> stateIds = first.layers[0].stateMachine.states
+                .ToDictionary(item => item.state.name, item => item.state.GetInstanceID());
+            Hash128 playerHash = AssetDatabase.GetAssetDependencyHash(
+                FennyRigBuilder.PlayerPrefabPath);
+
+            FennyRigBuilder.Build();
+            AnimatorController second = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                FennyRigBuilder.ControllerPath);
+            Dictionary<string, int> rebuiltIds = second.layers[0].stateMachine.states
+                .ToDictionary(item => item.state.name, item => item.state.GetInstanceID());
+
+            Assert.That(rebuiltIds, Is.EqualTo(stateIds));
+            Assert.That(AssetDatabase.GetAssetDependencyHash(
+                    FennyRigBuilder.PlayerPrefabPath),
+                Is.EqualTo(playerHash));
+        }
     }
 }

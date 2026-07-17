@@ -1,6 +1,8 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using SnowbreakFan.Player;
+using SnowbreakFan.Presentation;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEditor.U2D.Sprites;
@@ -22,6 +24,8 @@ namespace SnowbreakFan.Infrastructure.Editor
             "Assets/Game/Animations/Player/Fenny_Airborne.anim";
         public const string ControllerPath =
             "Assets/Game/Animations/Player/Fenny_Rig.controller";
+        public const string PlayerPrefabPath =
+            "Assets/Game/Prefabs/Player/Player.prefab";
 
         public static readonly string[] RequiredPartNames =
         {
@@ -50,7 +54,71 @@ namespace SnowbreakFan.Infrastructure.Editor
             AnimatorController controller =
                 CreateController(idle, run, airborne);
             BuildRigPrefab(controller);
+            InstallOnPlayer();
             AssetDatabase.SaveAssets();
+        }
+
+        public static void InstallOnPlayer()
+        {
+            GameObject rigPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(RigPrefabPath);
+            if (rigPrefab == null)
+                throw new UnityException("Fenny visual rig prefab is missing.");
+
+            GameObject root = PrefabUtility.LoadPrefabContents(PlayerPrefabPath);
+            try
+            {
+                Transform legacyVisual = root.transform.Find("Visual");
+                if (legacyVisual != null)
+                    Object.DestroyImmediate(legacyVisual.gameObject);
+
+                PlayerSpriteAnimator2D legacyAnimator =
+                    root.GetComponent<PlayerSpriteAnimator2D>();
+                if (legacyAnimator != null)
+                    Object.DestroyImmediate(legacyAnimator);
+
+                Transform existingRig = root.transform.Find("FennyVisualRig");
+                GameObject rig = existingRig != null &&
+                                 AssetDatabase.GetAssetPath(
+                                     PrefabUtility.GetCorrespondingObjectFromSource(
+                                         existingRig.gameObject)) == RigPrefabPath
+                    ? existingRig.gameObject
+                    : null;
+                if (existingRig != null && rig == null)
+                    Object.DestroyImmediate(existingRig.gameObject);
+                if (rig == null)
+                {
+                    rig = (GameObject)PrefabUtility.InstantiatePrefab(
+                        rigPrefab,
+                        root.transform);
+                }
+                rig.name = "FennyVisualRig";
+                rig.transform.localPosition = Vector3.zero;
+                rig.transform.localRotation = Quaternion.identity;
+                rig.transform.localScale = Vector3.one;
+
+                PlayerRigPresentation2D driver =
+                    root.GetComponent<PlayerRigPresentation2D>();
+                if (driver == null)
+                    driver = root.AddComponent<PlayerRigPresentation2D>();
+
+                SerializedObject serialized = new(driver);
+                serialized.FindProperty("animator").objectReferenceValue =
+                    rig.GetComponent<Animator>();
+                serialized.FindProperty("visualRoot").objectReferenceValue = rig.transform;
+                serialized.FindProperty("body").objectReferenceValue =
+                    root.GetComponent<Rigidbody2D>();
+                serialized.FindProperty("motor").objectReferenceValue =
+                    root.GetComponent<PlayerMotor2D>();
+                serialized.FindProperty("movementThreshold").floatValue = 0.1f;
+                serialized.FindProperty("referenceRunSpeed").floatValue = 6f;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+
+                PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefabPath);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
         }
 
         public static void RenderPreview(string outputPath)
@@ -414,15 +482,28 @@ namespace SnowbreakFan.Infrastructure.Editor
             };
 
             AnimatorStateMachine machine = controller.layers[0].stateMachine;
-            foreach (ChildAnimatorState child in machine.states.ToArray())
-                machine.RemoveState(child.state);
             foreach (AnimatorStateTransition transition in machine.anyStateTransitions.ToArray())
                 machine.RemoveAnyStateTransition(transition);
 
-            AnimatorState idle = machine.AddState("Idle", new Vector3(200f, 120f));
-            AnimatorState run = machine.AddState("Run", new Vector3(430f, 120f));
-            AnimatorState airborne =
-                machine.AddState("Airborne", new Vector3(315f, 300f));
+            string[] expectedStateNames = { "Idle", "Run", "Airborne" };
+            foreach (ChildAnimatorState child in machine.states.ToArray())
+            {
+                if (!expectedStateNames.Contains(child.state.name))
+                    machine.RemoveState(child.state);
+            }
+
+            AnimatorState idle = GetOrCreateState(
+                machine,
+                "Idle",
+                new Vector3(200f, 120f));
+            AnimatorState run = GetOrCreateState(
+                machine,
+                "Run",
+                new Vector3(430f, 120f));
+            AnimatorState airborne = GetOrCreateState(
+                machine,
+                "Airborne",
+                new Vector3(315f, 300f));
             idle.motion = idleClip;
             run.motion = runClip;
             airborne.motion = airborneClip;
@@ -433,38 +514,81 @@ namespace SnowbreakFan.Infrastructure.Editor
             run.speedParameter = "RunSpeed";
             machine.defaultState = idle;
 
-            AddTransition(idle, airborne, 0.05f, "IsAirborne", true);
-            AddTransition(idle, run, 0.08f, "IsRunning", true);
-            AddTransition(run, airborne, 0.05f, "IsAirborne", true);
-            AddTransition(run, idle, 0.08f, "IsRunning", false);
-
-            AnimatorStateTransition airToIdle =
-                AddTransition(airborne, idle, 0.06f, "IsAirborne", false);
-            airToIdle.AddCondition(AnimatorConditionMode.IfNot, 0f, "IsRunning");
-            AnimatorStateTransition airToRun =
-                AddTransition(airborne, run, 0.06f, "IsAirborne", false);
-            airToRun.AddCondition(AnimatorConditionMode.If, 0f, "IsRunning");
+            ConfigureTransitions(
+                idle,
+                (airborne, 0.05f, Conditions(("IsAirborne", true))),
+                (run, 0.08f, Conditions(("IsRunning", true))));
+            ConfigureTransitions(
+                run,
+                (airborne, 0.05f, Conditions(("IsAirborne", true))),
+                (idle, 0.08f, Conditions(("IsRunning", false))));
+            ConfigureTransitions(
+                airborne,
+                (idle, 0.06f, Conditions(
+                    ("IsAirborne", false),
+                    ("IsRunning", false))),
+                (run, 0.06f, Conditions(
+                    ("IsAirborne", false),
+                    ("IsRunning", true))));
 
             EditorUtility.SetDirty(controller);
             return controller;
         }
 
-        private static AnimatorStateTransition AddTransition(
-            AnimatorState source,
-            AnimatorState destination,
-            float duration,
-            string parameter,
-            bool expected)
+        private static AnimatorState GetOrCreateState(
+            AnimatorStateMachine machine,
+            string name,
+            Vector3 position)
         {
-            AnimatorStateTransition transition = source.AddTransition(destination);
-            transition.hasExitTime = false;
-            transition.hasFixedDuration = true;
-            transition.duration = duration;
-            transition.AddCondition(
-                expected ? AnimatorConditionMode.If : AnimatorConditionMode.IfNot,
-                0f,
-                parameter);
-            return transition;
+            return machine.states
+                       .Select(item => item.state)
+                       .FirstOrDefault(state => state.name == name) ??
+                   machine.AddState(name, position);
+        }
+
+        private static AnimatorCondition[] Conditions(
+            params (string parameter, bool expected)[] values)
+        {
+            return values.Select(value => new AnimatorCondition
+            {
+                mode = value.expected
+                    ? AnimatorConditionMode.If
+                    : AnimatorConditionMode.IfNot,
+                parameter = value.parameter,
+                threshold = 0f
+            }).ToArray();
+        }
+
+        private static void ConfigureTransitions(
+            AnimatorState source,
+            params (AnimatorState destination, float duration,
+                AnimatorCondition[] conditions)[] specifications)
+        {
+            AnimatorState[] expectedDestinations = specifications
+                .Select(item => item.destination)
+                .ToArray();
+            foreach (AnimatorStateTransition existing in source.transitions.ToArray())
+            {
+                if (!expectedDestinations.Contains(existing.destinationState))
+                    source.RemoveTransition(existing);
+            }
+
+            foreach ((AnimatorState destination, float duration,
+                         AnimatorCondition[] conditions) in specifications)
+            {
+                AnimatorStateTransition[] matching = source.transitions
+                    .Where(item => item.destinationState == destination)
+                    .ToArray();
+                AnimatorStateTransition transition = matching.FirstOrDefault() ??
+                                                      source.AddTransition(destination);
+                foreach (AnimatorStateTransition duplicate in matching.Skip(1))
+                    source.RemoveTransition(duplicate);
+
+                transition.hasExitTime = false;
+                transition.hasFixedDuration = true;
+                transition.duration = duration;
+                transition.conditions = conditions;
+            }
         }
 
         private static void SetRotationCurve(

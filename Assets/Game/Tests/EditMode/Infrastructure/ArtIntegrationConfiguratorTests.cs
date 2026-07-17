@@ -2,7 +2,6 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.TestTools.Utils;
 
 namespace SnowbreakFan.Infrastructure.Tests
 {
@@ -38,77 +37,45 @@ namespace SnowbreakFan.Infrastructure.Tests
         }
 
         [Test]
-        public void FennyFrameSheetsUseBottomCenterPivotsAndComparableWorldHeight()
+        public void PlayerPrefabUsesCutoutRigWithGroundOverlapAndStablePhysics()
         {
-            Sprite[] idle = LoadSprites(
-                "Assets/Game/Art/Characters/Player/FennyGolden_IdlePoses_Candidate_v003.png");
-            Sprite[] run = LoadSprites(
-                "Assets/Game/Art/Characters/Player/FennyGolden_RunPoses_Candidate_v003.png");
-
-            Assert.That(idle, Has.Length.EqualTo(4));
-            Assert.That(run, Has.Length.EqualTo(8));
-            Assert.That(idle.All(sprite => sprite.pivot.y <= 0.01f), Is.True);
-            Assert.That(run.All(sprite => sprite.pivot.y <= 0.01f), Is.True);
-            Assert.That(idle.Average(sprite => sprite.bounds.size.y),
-                Is.EqualTo(1.91f).Within(0.08f));
-            Assert.That(run.Average(sprite => sprite.bounds.size.y),
-                Is.EqualTo(1.91f).Within(0.08f));
-        }
-
-        [Test]
-        public void FennyAirborneAndPrefabUseStablePresentationCalibration()
-        {
-            const string airbornePath =
-                "Assets/Game/Art/Characters/Player/FennyGolden_Airborne_Candidate_v004.png";
             const string playerPath = "Assets/Game/Prefabs/Player/Player.prefab";
-
-            Sprite airborne = AssetDatabase.LoadAssetAtPath<Sprite>(airbornePath);
-            Assert.That(airborne, Is.Not.Null);
-            Assert.That(airborne.pivot.y, Is.LessThanOrEqualTo(0.01f));
-            Assert.That(airborne.bounds.size.y, Is.EqualTo(1.91f).Within(0.03f));
-
             GameObject root = PrefabUtility.LoadPrefabContents(playerPath);
             try
             {
-                Transform visual = root.transform.Find("Visual");
-                Component animator = root.GetComponent("PlayerSpriteAnimator2D");
+                Transform visual = root.transform.Find("FennyVisualRig");
+                Component driver = root.GetComponent("PlayerRigPresentation2D");
+                Animator animator = visual != null ? visual.GetComponent<Animator>() : null;
+                CapsuleCollider2D collider = root.GetComponent<CapsuleCollider2D>();
+
+                Assert.That(root.transform.Find("Visual"), Is.Null);
+                Assert.That(root.GetComponent("PlayerSpriteAnimator2D"), Is.Null);
+                Assert.That(driver, Is.Not.Null);
+                Assert.That(visual, Is.Not.Null);
+                Assert.That(visual.localPosition, Is.EqualTo(Vector3.zero));
                 Assert.That(animator, Is.Not.Null);
-                SerializedObject serialized = new(animator);
-                SerializedProperty offsets = serialized.FindProperty("runFrameOffsets");
+                Assert.That(AssetDatabase.GetAssetPath(animator.runtimeAnimatorController),
+                    Is.EqualTo("Assets/Game/Animations/Player/Fenny_Rig.controller"));
+                Assert.That(visual.GetComponentsInChildren<SpriteRenderer>(true),
+                    Has.Length.EqualTo(21));
+                Assert.That(collider.size, Is.EqualTo(new Vector2(0.8f, 1.8f)));
 
-                Assert.That(visual.localPosition, Is.EqualTo(new Vector3(0f, -0.95f, 0f)));
-                Assert.That(serialized.FindProperty("runFramesPerSecond").floatValue, Is.EqualTo(16f));
-                Assert.That(serialized.FindProperty("airborneFrame").objectReferenceValue, Is.SameAs(airborne));
-                Assert.That(offsets.arraySize, Is.EqualTo(8));
+                float colliderBottom = collider.offset.y - collider.size.y * 0.5f;
+                float visualContact = visual.Find("GroundContact").localPosition.y;
+                Assert.That(visualContact, Is.EqualTo(colliderBottom - 0.1f).Within(0.001f));
 
-                Vector2[] expected =
-                {
-                    new(0.009259f, 0f),
-                    new(-0.046296f, 0f),
-                    new(-0.159722f, 0f),
-                    new(-0.328704f, 0f),
-                    new(-0.041667f, 0f),
-                    new(-0.106481f, 0f),
-                    new(-0.215278f, 0f),
-                    new(-0.349537f, 0f)
-                };
-                for (int index = 0; index < expected.Length; index++)
-                {
-                    Assert.That(offsets.GetArrayElementAtIndex(index).vector2Value,
-                        Is.EqualTo(expected[index])
-                            .Using(Vector2ComparerWithEqualsOperator.Instance));
-                }
+                SerializedObject serialized = new(driver);
+                Assert.That(serialized.FindProperty("animator").objectReferenceValue,
+                    Is.SameAs(animator));
+                Assert.That(serialized.FindProperty("visualRoot").objectReferenceValue,
+                    Is.SameAs(visual));
+                Assert.That(serialized.FindProperty("body").objectReferenceValue,
+                    Is.SameAs(root.GetComponent<Rigidbody2D>()));
             }
             finally
             {
                 PrefabUtility.UnloadPrefabContents(root);
             }
         }
-
-        private static Sprite[] LoadSprites(string path) =>
-            AssetDatabase.LoadAllAssetsAtPath(path)
-                .OfType<Sprite>()
-                .OrderBy(sprite => sprite.name)
-                .ToArray();
     }
 }

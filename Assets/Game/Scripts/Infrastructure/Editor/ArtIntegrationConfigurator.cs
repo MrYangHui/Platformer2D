@@ -1,5 +1,4 @@
 using System.Linq;
-using SnowbreakFan.Player;
 using SnowbreakFan.Presentation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -11,26 +10,6 @@ namespace SnowbreakFan.Infrastructure.Editor
     public static class ArtIntegrationConfigurator
     {
         private const string LevelScenePath = "Assets/Game/Scenes/10_Level_Prototype.unity";
-        private const string PlayerPrefabPath = "Assets/Game/Prefabs/Player/Player.prefab";
-        private const string FennyIdlePath =
-            "Assets/Game/Art/Characters/Player/FennyGolden_IdlePoses_Candidate_v003.png";
-        private const string FennyRunPath =
-            "Assets/Game/Art/Characters/Player/FennyGolden_RunPoses_Candidate_v003.png";
-        private const string FennyAirbornePath =
-            "Assets/Game/Art/Characters/Player/FennyGolden_Airborne_Candidate_v004.png";
-
-        private static readonly Vector2[] RunFrameOffsets =
-        {
-            new(0.009259f, 0f),
-            new(-0.046296f, 0f),
-            new(-0.159722f, 0f),
-            new(-0.328704f, 0f),
-            new(-0.041667f, 0f),
-            new(-0.106481f, 0f),
-            new(-0.215278f, 0f),
-            new(-0.349537f, 0f)
-        };
-
         private readonly struct PlatformBinding
         {
             public PlatformBinding(string prefabPath, string spritePath)
@@ -139,14 +118,12 @@ namespace SnowbreakFan.Infrastructure.Editor
         public static void Configure()
         {
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-            ConfigureAirborneImporter();
+            FennyRigBuilder.Build();
 
             foreach (PlatformBinding binding in PlatformBindings)
                 ConfigurePlatform(binding);
 
             ConfigureBackgrounds();
-            ConfigurePlayer();
-
             AssetDatabase.SaveAssets();
         }
 
@@ -252,97 +229,5 @@ namespace SnowbreakFan.Infrastructure.Editor
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void ConfigurePlayer()
-        {
-            Sprite[] idleFrames = LoadSprites(FennyIdlePath);
-            Sprite[] runFrames = LoadSprites(FennyRunPath);
-            Sprite airborne = AssetDatabase.LoadAssetAtPath<Sprite>(FennyAirbornePath);
-            GameObject root = PrefabUtility.LoadPrefabContents(PlayerPrefabPath);
-
-            try
-            {
-                Rigidbody2D body = root.GetComponent<Rigidbody2D>();
-                PlayerMotor2D motor = root.GetComponent<PlayerMotor2D>();
-                Transform visual = root.transform.Find("Visual");
-                SpriteRenderer renderer = visual.GetComponent<SpriteRenderer>();
-
-                visual.localPosition = new Vector3(0f, -0.95f, 0f);
-                visual.localRotation = Quaternion.identity;
-                visual.localScale = Vector3.one;
-                renderer.sprite = idleFrames[0];
-                renderer.color = Color.white;
-                renderer.drawMode = SpriteDrawMode.Simple;
-                renderer.sortingLayerName = "Player";
-                renderer.flipX = false;
-
-                PlayerSpriteAnimator2D animator = root.GetComponent<PlayerSpriteAnimator2D>();
-                if (animator == null)
-                    animator = root.AddComponent<PlayerSpriteAnimator2D>();
-
-                SerializedObject serialized = new(animator);
-                serialized.FindProperty("targetRenderer").objectReferenceValue = renderer;
-                serialized.FindProperty("body").objectReferenceValue = body;
-                serialized.FindProperty("motor").objectReferenceValue = motor;
-                serialized.FindProperty("visualRoot").objectReferenceValue = visual;
-                serialized.FindProperty("baseVisualLocalPosition").vector3Value = visual.localPosition;
-                AssignSprites(serialized.FindProperty("idleFrames"), idleFrames);
-                AssignSprites(serialized.FindProperty("runFrames"), runFrames);
-                AssignVectors(serialized.FindProperty("runFrameOffsets"), RunFrameOffsets);
-                serialized.FindProperty("airborneOffset").vector2Value = Vector2.zero;
-                serialized.FindProperty("airborneFrame").objectReferenceValue = airborne;
-                serialized.FindProperty("idleFramesPerSecond").floatValue = 4f;
-                serialized.FindProperty("runFramesPerSecond").floatValue = 16f;
-                serialized.FindProperty("movementThreshold").floatValue = 0.1f;
-                serialized.ApplyModifiedPropertiesWithoutUndo();
-
-                PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefabPath);
-            }
-            finally
-            {
-                PrefabUtility.UnloadPrefabContents(root);
-            }
-        }
-
-        private static Sprite[] LoadSprites(string assetPath)
-        {
-            return AssetDatabase.LoadAllAssetsAtPath(assetPath)
-                .OfType<Sprite>()
-                .OrderBy(sprite => sprite.name)
-                .ToArray();
-        }
-
-        private static void ConfigureAirborneImporter()
-        {
-            Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(FennyAirbornePath);
-            TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(FennyAirbornePath);
-            importer.textureType = TextureImporterType.Sprite;
-            importer.spriteImportMode = SpriteImportMode.Single;
-            importer.spritePixelsPerUnit = texture.height / 1.91f;
-            importer.mipmapEnabled = false;
-            importer.alphaIsTransparency = true;
-            importer.filterMode = FilterMode.Bilinear;
-
-            TextureImporterSettings settings = new();
-            importer.ReadTextureSettings(settings);
-            settings.spriteAlignment = (int)SpriteAlignment.BottomCenter;
-            settings.spritePivot = new Vector2(0.5f, 0f);
-            settings.spriteMeshType = SpriteMeshType.FullRect;
-            importer.SetTextureSettings(settings);
-            importer.SaveAndReimport();
-        }
-
-        private static void AssignSprites(SerializedProperty property, Sprite[] sprites)
-        {
-            property.arraySize = sprites.Length;
-            for (int index = 0; index < sprites.Length; index++)
-                property.GetArrayElementAtIndex(index).objectReferenceValue = sprites[index];
-        }
-
-        private static void AssignVectors(SerializedProperty property, Vector2[] values)
-        {
-            property.arraySize = values.Length;
-            for (int index = 0; index < values.Length; index++)
-                property.GetArrayElementAtIndex(index).vector2Value = values[index];
-        }
     }
 }
