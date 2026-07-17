@@ -110,6 +110,28 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
         result = normalize(self.manifest_path)
         self.assertEqual(result.frames["Apex"].pelvis_anchor, (32, 58))
 
+    def test_airborne_frame_can_align_visual_core_x_and_pelvis_y(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        frame = data["frames"][2]
+        frame["anchors"]["visual_core"] = [38, 82]
+        frame["destination_visual_core_x"] = 30
+        path = self.root / "visual-core-alignment.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        result = normalize(path).frames["Apex"]
+
+        self.assertEqual(result.visual_core_anchor[0], 30)
+        self.assertEqual(result.pelvis_anchor[1], 58)
+
+    def test_visual_core_destination_requires_visual_core_anchor(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["frames"][2]["destination_visual_core_x"] = 30
+        path = self.root / "missing-visual-core.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "Apex.*visual_core"):
+            normalize(path)
+
     def test_rejects_final_head_pelvis_error_over_three_percent(self) -> None:
         manifest = self.write_manifest(head_pelvis_error=0.04)
         with self.assertRaisesRegex(ValueError, "HeadPelvisRatio"):
@@ -192,6 +214,30 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
         self.assertIn("Idle_00", result.frames)
         self.assertIn("Idle_01", result.frames)
 
+    def test_motion_group_accepts_visual_core_x_inside_generic_budget(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["frames"][0]["anchors"]["visual_core"] = [31, 82]
+        data["frames"][1]["anchors"]["visual_core"] = [33, 82]
+        data["motion_groups"] = [self.visual_core_motion_group()]
+        path = self.root / "accepted-visual-core-motion-group.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        result = normalize(path)
+
+        self.assertIn("Idle_00", result.frames)
+        self.assertIn("Idle_01", result.frames)
+
+    def test_motion_group_rejects_visual_core_x_span_over_generic_budget(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["frames"][0]["anchors"]["visual_core"] = [31, 82]
+        data["frames"][1]["anchors"]["visual_core"] = [34, 82]
+        data["motion_groups"] = [self.visual_core_motion_group()]
+        path = self.root / "rejected-visual-core-motion-group.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "RunCore.*visual_core X span"):
+            normalize(path)
+
     def test_motion_groups_rejects_explicit_null(self) -> None:
         data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
         data["motion_groups"] = None
@@ -242,6 +288,19 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
             "max_pelvis_x_step": 2,
             "max_pelvis_y_span": y_span,
             "max_pelvis_y_step": y_step,
+        }
+
+    @staticmethod
+    def visual_core_motion_group() -> dict[str, object]:
+        return {
+            "name": "RunCore",
+            "frames": ["Idle_00", "Idle_01"],
+            "x_anchor": "visual_core",
+            "y_anchor": "pelvis",
+            "max_x_span": 2,
+            "max_x_step": 2,
+            "max_y_span": 2,
+            "max_y_step": 2,
         }
 
     def test_contact_sheet_is_written_with_rgba_content(self) -> None:

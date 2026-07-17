@@ -20,6 +20,7 @@ class FrameResult:
     sole_anchor: tuple[int, int]
     pelvis_anchor: tuple[int, int]
     head_anchor: tuple[int, int]
+    visual_core_anchor: tuple[int, int] | None = None
 
 
 @dataclass(frozen=True)
@@ -200,27 +201,81 @@ def _validate_motion_groups(
             )
 
         group_frames = [frames[frame_name] for frame_name in frame_names]
-        axes = (
-            (
-                "X",
-                [frame.pelvis_anchor[0] for frame in group_frames],
-                _motion_budget(group, "max_pelvis_x_span", name),
-                _motion_budget(group, "max_pelvis_x_step", name),
-            ),
-            (
-                "Y",
-                [frame.pelvis_anchor[1] for frame in group_frames],
-                _motion_budget(group, "max_pelvis_y_span", name),
-                _motion_budget(group, "max_pelvis_y_step", name),
-            ),
+        generic_schema = (
+            "x_anchor",
+            "y_anchor",
+            "max_x_span",
+            "max_x_step",
+            "max_y_span",
+            "max_y_step",
         )
-        for axis_name, values, span_budget, step_budget in axes:
+        uses_generic_schema = any(
+            key in group for key in ("x_anchor", "y_anchor", "max_x_span")
+        )
+        if uses_generic_schema:
+            missing_keys = [key for key in generic_schema if key not in group]
+            if missing_keys:
+                raise ValueError(
+                    f"Motion group '{name}' requires generic motion budget fields: "
+                    f"{', '.join(missing_keys)}"
+                )
+            x_anchor = group["x_anchor"]
+            y_anchor = group["y_anchor"]
+            if x_anchor not in {"pelvis", "visual_core"}:
+                raise ValueError(
+                    f"Motion group '{name}' x_anchor must be 'pelvis' or 'visual_core'"
+                )
+            if y_anchor != "pelvis":
+                raise ValueError(f"Motion group '{name}' y_anchor must be 'pelvis'")
+
+            def anchor_values(anchor_name: str, component: int) -> list[int]:
+                values: list[int] = []
+                for frame_name, frame in zip(frame_names, group_frames):
+                    anchor = getattr(frame, f"{anchor_name}_anchor")
+                    if anchor is None:
+                        raise ValueError(
+                            f"Motion group '{name}' frame '{frame_name}' requires a "
+                            f"{anchor_name} anchor"
+                        )
+                    values.append(anchor[component])
+                return values
+
+            axes = (
+                (
+                    f"{x_anchor} X",
+                    anchor_values(x_anchor, 0),
+                    _motion_budget(group, "max_x_span", name),
+                    _motion_budget(group, "max_x_step", name),
+                ),
+                (
+                    f"{y_anchor} Y",
+                    anchor_values(y_anchor, 1),
+                    _motion_budget(group, "max_y_span", name),
+                    _motion_budget(group, "max_y_step", name),
+                ),
+            )
+        else:
+            axes = (
+                (
+                    "pelvis X",
+                    [frame.pelvis_anchor[0] for frame in group_frames],
+                    _motion_budget(group, "max_pelvis_x_span", name),
+                    _motion_budget(group, "max_pelvis_x_step", name),
+                ),
+                (
+                    "pelvis Y",
+                    [frame.pelvis_anchor[1] for frame in group_frames],
+                    _motion_budget(group, "max_pelvis_y_span", name),
+                    _motion_budget(group, "max_pelvis_y_step", name),
+                ),
+            )
+        for anchor_axis_name, values, span_budget, step_budget in axes:
             span = max(values) - min(values)
             if span > span_budget:
                 minimum_index = values.index(min(values))
                 maximum_index = values.index(max(values))
                 raise ValueError(
-                    f"Motion group '{name}' pelvis {axis_name} span "
+                    f"Motion group '{name}' {anchor_axis_name} span "
                     f"{frame_names[minimum_index]} -> {frame_names[maximum_index]} "
                     f"is {span} px; "
                     f"maximum is {span_budget:g} px"
@@ -230,7 +285,7 @@ def _validate_motion_groups(
                 step = abs(values[next_index] - value)
                 if step > step_budget:
                     raise ValueError(
-                        f"Motion group '{name}' pelvis {axis_name} step "
+                        f"Motion group '{name}' {anchor_axis_name} step "
                         f"{frame_names[index]} -> {frame_names[next_index]} is {step} px; "
                         f"maximum is {step_budget:g} px"
                     )
@@ -309,6 +364,16 @@ def normalize(manifest_path: Path) -> NormalizationResult:
         sole = _validate_anchor(name, "sole", anchors.get("sole"), (source_width, source_height))
         pelvis = _validate_anchor(name, "pelvis", anchors.get("pelvis"), (source_width, source_height))
         head = _validate_anchor(name, "head", anchors.get("head"), (source_width, source_height))
+        visual_core = (
+            _validate_anchor(
+                name,
+                "visual_core",
+                anchors["visual_core"],
+                (source_width, source_height),
+            )
+            if "visual_core" in anchors
+            else None
+        )
         measured = math.dist(head, pelvis)
         expected_source_distance = source_reference or float(canonical)
         error = abs(measured - expected_source_distance) / expected_source_distance
@@ -340,6 +405,11 @@ def normalize(manifest_path: Path) -> NormalizationResult:
         scaled_sole = _scaled_anchor(sole, alpha_box, source_height, scale)
         scaled_pelvis = _scaled_anchor(pelvis, alpha_box, source_height, scale)
         scaled_head = _scaled_anchor(head, alpha_box, source_height, scale)
+        scaled_visual_core = (
+            _scaled_anchor(visual_core, alpha_box, source_height, scale)
+            if visual_core is not None
+            else None
+        )
 
         alignment = frame_data.get("alignment")
         if alignment == "grounded":
@@ -352,10 +422,22 @@ def normalize(manifest_path: Path) -> NormalizationResult:
                 frame_data.get("destination_anchor", [cell_width // 2, cell_height // 2]),
                 f"Frame '{name}' destination_anchor",
             )
-            offset = (
-                destination[0] - scaled_pelvis[0],
-                destination[1] - scaled_pelvis[1],
-            )
+            destination_visual_core_x = frame_data.get("destination_visual_core_x")
+            if destination_visual_core_x is None:
+                offset_x = destination[0] - scaled_pelvis[0]
+            else:
+                if scaled_visual_core is None:
+                    raise ValueError(
+                        f"Frame '{name}' destination_visual_core_x requires a visual_core anchor"
+                    )
+                if isinstance(destination_visual_core_x, bool) or not isinstance(
+                    destination_visual_core_x, int
+                ):
+                    raise ValueError(
+                        f"Frame '{name}' destination_visual_core_x must be an integer"
+                    )
+                offset_x = destination_visual_core_x - scaled_visual_core[0]
+            offset = (offset_x, destination[1] - scaled_pelvis[1])
         else:
             raise ValueError(f"Frame '{name}' alignment must be 'grounded' or 'airborne'")
         paste_left = offset[0]
@@ -373,6 +455,11 @@ def normalize(manifest_path: Path) -> NormalizationResult:
         final_sole = _translate(scaled_sole, offset)
         final_pelvis = _translate(scaled_pelvis, offset)
         final_head = _translate(scaled_head, offset)
+        final_visual_core = (
+            _translate(scaled_visual_core, offset)
+            if scaled_visual_core is not None
+            else None
+        )
         final_distance = math.dist(final_head, final_pelvis)
         final_error = abs(final_distance - canonical) / canonical
         if final_error > MAX_HEAD_PELVIS_ERROR:
@@ -389,6 +476,7 @@ def normalize(manifest_path: Path) -> NormalizationResult:
             sole_anchor=final_sole,
             pelvis_anchor=final_pelvis,
             head_anchor=final_head,
+            visual_core_anchor=final_visual_core,
         )
 
     _validate_motion_groups(manifest.get("motion_groups", []), results)
