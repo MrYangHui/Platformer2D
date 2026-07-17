@@ -4,7 +4,7 @@
 
 **Goal:** Replace Fenny's rigid cutout puppet with a stable whole-frame Idle/Run/Rising/Apex/Falling presentation and establish a reusable profile-driven pipeline for future playable characters.
 
-**Architecture:** A deterministic offline normalizer packs complete character poses into fixed `512 x 1024` cells with one canonical character scale, a sole line at pixel `48`, and fixed bottom-center pivots. Unity imports the 15 semantic sprites, builds a `CharacterPresentationProfile`, and installs one `PlayerFramePresentation2D` plus one SpriteRenderer on Player; gameplay physics remain untouched and non-deforming attachments stay optional.
+**Architecture:** A deterministic offline normalizer packs complete character poses into fixed `768 x 1024` cells with one canonical character scale, a sole line at pixel `48`, and fixed bottom-center pivots. Unity imports the 15 semantic sprites, builds a `CharacterPresentationProfile`, and installs one `PlayerFramePresentation2D` plus one SpriteRenderer on Player; gameplay physics remain untouched and non-deforming attachments stay optional.
 
 **Tech Stack:** Unity 6000.3.19f1, C#, Unity Test Framework/NUnit, Python 3, Pillow, NumPy, JSON manifests, built-in image generation, Git.
 
@@ -12,7 +12,7 @@
 
 - Execute in `F:\UnityProjects\Platformer2D` without subagents or a separate worktree.
 - Do not modify `Rigidbody2D`, `CapsuleCollider2D`, `GroundProbe2D`, `PlayerMotor2D`, movement configuration, input, camera, checkpoints, collectibles, UI, or level geometry.
-- Final frame cells are exactly `512 x 1024`; atlas layout is 4 columns by 4 rows; cell 15 remains transparent and unsliced.
+- Final frame cells are exactly `768 x 1024`; atlas layout is 4 columns by 4 rows; cell 15 remains transparent and unsliced. The wider transparent canvas is required by the existing extended run silhouettes and does not change world scale.
 - Final sprites use `480` PPU, Full Rect meshes, bilinear filtering, no mipmaps, alpha transparency, and a fixed normalized pivot `(0.5, 0)`.
 - The sole baseline is pixel `48`; Fenny's visual root Y is `-1.1`, producing a sole line at world Y `-1.0`, which is `0.1` below the collider bottom.
 - Final semantic order is `Idle_00..03`, `Run_00..07`, `Rising`, `Apex`, `Falling`; exactly 15 sprites are imported.
@@ -170,7 +170,7 @@ Reject any result with disconnected anatomy, a different face, missing equipment
 
 - [ ] **Step 2: Author the manifest**
 
-Use `512 x 1024` destination cells, `sole_line = 48`, `atlas_columns = 4`, `canonical_head_pelvis = 430`, `airborne_pelvis_target = [256,505]`, the three source grids `(4x1, 4x2, 3x1)`, and this frame order:
+Use `768 x 1024` destination cells, `sole_line = 48`, `atlas_columns = 4`, `canonical_head_pelvis = 430`, `airborne_pelvis_target = [384,505]`, the three source grids `(4x1, 4x2, 3x1)`, and this frame order. Each source also records its native `expected_head_pelvis` calibration so differently sized generation strips normalize to the same target while per-strip drift over 3% is rejected:
 
 ```json
 [
@@ -192,7 +192,7 @@ Record integer `head`, `pelvis`, and `sole` anchors for every source cell. Groun
   --contact-sheet 'TestResults/FennyFrames/FennyGolden_v006_ContactSheet.png'
 ```
 
-Expected: exit `0`, atlas `2048 x 4096`, fifteen populated cells, transparent cell 15, and no ratio rejection.
+Expected: exit `0`, atlas `3072 x 4096`, fifteen populated cells, transparent cell 15, and no ratio rejection.
 
 - [ ] **Step 4: Inspect source-size and 25% contact sheets**
 
@@ -386,7 +386,7 @@ git commit -m "feat: drive standardized character frames"
 
 ```csharp
 Assert.That(sprites, Has.Count.EqualTo(15));
-Assert.That(sprites.All(sprite => sprite.rect.size == new Vector2(512f, 1024f)), Is.True);
+Assert.That(sprites.All(sprite => sprite.rect.size == new Vector2(768f, 1024f)), Is.True);
 Assert.That(sprites.All(sprite => sprite.pixelsPerUnit == 480f), Is.True);
 Assert.That(sprites.All(sprite => sprite.pivot == new Vector2(256f, 0f)), Is.True);
 
