@@ -173,6 +173,49 @@ namespace SnowbreakFan.Infrastructure.Tests
         }
 
         [Test]
+        public void AdapterRunPhaseDoesNotReinterpretHistoryWhenSpeedDrops()
+        {
+            GameObject root = new("Player");
+            cleanup.Add(root);
+            Rigidbody2D body = root.AddComponent<Rigidbody2D>();
+            PlayerMotor2D motor = root.AddComponent<PlayerMotor2D>();
+            motor.enabled = false;
+            GameObject visualObject = new("Visual");
+            visualObject.transform.SetParent(root.transform, false);
+            SpriteRenderer renderer = visualObject.AddComponent<SpriteRenderer>();
+            PlayerFramePresentation2D adapter = root.AddComponent<PlayerFramePresentation2D>();
+            CharacterPresentationProfile profile = CreateValidProfile();
+            SerializedObject serialized = new(adapter);
+            serialized.FindProperty("profile").objectReferenceValue = profile;
+            serialized.FindProperty("targetRenderer").objectReferenceValue = renderer;
+            serialized.FindProperty("visualRoot").objectReferenceValue = visualObject.transform;
+            serialized.FindProperty("body").objectReferenceValue = body;
+            serialized.FindProperty("motor").objectReferenceValue = motor;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            InvokePrivate(adapter, "Awake");
+            Vector3 fixedPosition = visualObject.transform.localPosition;
+            Vector3 fixedScale = visualObject.transform.localScale;
+            SetMotorState(motor, PlayerMotionState.Grounded);
+            body.linearVelocity = new Vector2(6f, 0f);
+            InvokePrivate(adapter, "Tick", 0f);
+            Assert.That(renderer.sprite.name, Is.EqualTo("Run_00"));
+
+            for (int tick = 0; tick < 60; tick++)
+                InvokePrivate(adapter, "Tick", 1f / 60f);
+            int before = GetFrameIndex(renderer.sprite.name);
+
+            body.linearVelocity = new Vector2(4.6f, 0f);
+            InvokePrivate(adapter, "Tick", 1f / 60f);
+            int after = GetFrameIndex(renderer.sprite.name);
+
+            Assert.That(before, Is.Zero);
+            Assert.That(after, Is.EqualTo(before).Or.EqualTo((before + 1) % 8));
+            Assert.That(visualObject.transform.localPosition, Is.EqualTo(fixedPosition));
+            Assert.That(visualObject.transform.localScale, Is.EqualTo(fixedScale));
+        }
+
+        [Test]
         public void RunPhaseDoesNotReinterpretHistoryWhenSpeedDrops()
         {
             FramePlaybackClock clock = new();
@@ -214,6 +257,42 @@ namespace SnowbreakFan.Infrastructure.Tests
             Assert.That(clock.CurrentIndex(8), Is.EqualTo(4));
             clock.Reset();
             Assert.That(clock.CurrentIndex(8), Is.Zero);
+        }
+
+        [TestCase(-0.01f)]
+        [TestCase(float.NaN)]
+        [TestCase(float.PositiveInfinity)]
+        public void PlaybackClockRejectsInvalidDeltaTime(float deltaTime)
+        {
+            FramePlaybackClock clock = new();
+
+            Assert.That(
+                () => clock.Advance(deltaTime, 16f),
+                Throws.TypeOf<System.ArgumentOutOfRangeException>());
+        }
+
+        [TestCase(0f)]
+        [TestCase(-0.01f)]
+        [TestCase(float.NaN)]
+        [TestCase(float.PositiveInfinity)]
+        public void PlaybackClockRejectsInvalidFramesPerSecond(float framesPerSecond)
+        {
+            FramePlaybackClock clock = new();
+
+            Assert.That(
+                () => clock.Advance(1f / 60f, framesPerSecond),
+                Throws.TypeOf<System.ArgumentOutOfRangeException>());
+        }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void PlaybackClockRejectsNonPositiveFrameCount(int frameCount)
+        {
+            FramePlaybackClock clock = new();
+
+            Assert.That(
+                () => clock.CurrentIndex(frameCount),
+                Throws.TypeOf<System.ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -331,6 +410,20 @@ namespace SnowbreakFan.Infrastructure.Tests
                 BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null, methodName);
             method.Invoke(target, null);
+        }
+
+        private static void InvokePrivate(object target, string methodName, object argument)
+        {
+            MethodInfo method = target.GetType().GetMethod(
+                methodName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null, methodName);
+            method.Invoke(target, new[] { argument });
+        }
+
+        private static int GetFrameIndex(string spriteName)
+        {
+            return int.Parse(spriteName.Substring(spriteName.LastIndexOf('_') + 1));
         }
 
         private static void SetMotorState(PlayerMotor2D motor, PlayerMotionState state)

@@ -48,6 +48,11 @@ namespace SnowbreakFan.Presentation
 
         private void Update()
         {
+            Tick(Time.deltaTime);
+        }
+
+        private void Tick(float deltaTime)
+        {
             float horizontalSpeed = body.linearVelocity.x;
             float absoluteHorizontalSpeed = Mathf.Abs(horizontalSpeed);
             if (absoluteHorizontalSpeed > profile.MovementThreshold)
@@ -63,19 +68,22 @@ namespace SnowbreakFan.Presentation
             }
             else
             {
-                AdvancePlayback(state, absoluteHorizontalSpeed);
+                AdvancePlayback(deltaTime, state, absoluteHorizontalSpeed);
             }
 
             targetRenderer.sprite = ResolveFrame(state) ??
                                     profile.FallbackFrame;
         }
 
-        private void AdvancePlayback(PresentationState state, float absoluteHorizontalSpeed)
+        private void AdvancePlayback(
+            float deltaTime,
+            PresentationState state,
+            float absoluteHorizontalSpeed)
         {
             switch (state)
             {
                 case PresentationState.Idle:
-                    playbackClock.Advance(Time.deltaTime, profile.IdleFramesPerSecond);
+                    playbackClock.Advance(deltaTime, profile.IdleFramesPerSecond);
                     break;
                 case PresentationState.Run:
                     float speedMultiplier = Mathf.Clamp(
@@ -83,7 +91,7 @@ namespace SnowbreakFan.Presentation
                         0.75f,
                         1.35f);
                     playbackClock.Advance(
-                        Time.deltaTime,
+                        deltaTime,
                         profile.RunFramesPerSecond * speedMultiplier);
                     break;
             }
