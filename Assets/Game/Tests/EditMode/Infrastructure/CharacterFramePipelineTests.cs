@@ -262,6 +262,7 @@ namespace SnowbreakFan.Infrastructure.Tests
         [TestCase(-0.01f)]
         [TestCase(float.NaN)]
         [TestCase(float.PositiveInfinity)]
+        [TestCase(float.NegativeInfinity)]
         public void PlaybackClockRejectsInvalidDeltaTime(float deltaTime)
         {
             FramePlaybackClock clock = new();
@@ -275,6 +276,7 @@ namespace SnowbreakFan.Infrastructure.Tests
         [TestCase(-0.01f)]
         [TestCase(float.NaN)]
         [TestCase(float.PositiveInfinity)]
+        [TestCase(float.NegativeInfinity)]
         public void PlaybackClockRejectsInvalidFramesPerSecond(float framesPerSecond)
         {
             FramePlaybackClock clock = new();
