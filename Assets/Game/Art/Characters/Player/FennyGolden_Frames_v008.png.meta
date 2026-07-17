@@ -81,12 +81,12 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 480
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -105,10 +105,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -133,265 +133,265 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_0
+      name: Fenny_Idle_00
       rect:
         serializedVersion: 2
-        x: 253
-        y: 2095
-        width: 255
-        height: 874
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 2048
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: a63333aec43a8e290800000000000000
-      internalID: -7860853598833134742
+      spriteID: 585dad580c4dc4e4fbb0b37dee5546e9
+      internalID: 836654564
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_1
+      name: Fenny_Run_00
       rect:
         serializedVersion: 2
-        x: 824
-        y: 2078
-        width: 600
-        height: 847
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 2048
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ac44799c86c8bec40800000000000000
-      internalID: 5542678148096148682
+      spriteID: 80cbb975487538944b07a58b15b82318
+      internalID: -1759255303
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_2
+      name: Fenny_Run_01
       rect:
         serializedVersion: 2
-        x: 1658
-        y: 2115
-        width: 420
-        height: 790
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 2048
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6a92aa9d7262d8bd0800000000000000
-      internalID: -2626401055089743450
+      spriteID: b43c188c6eaacaf46aa1a816f1358ac3
+      internalID: 125847944
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_3
+      name: Fenny_Run_02
       rect:
         serializedVersion: 2
-        x: 2381
-        y: 2107
-        width: 459
-        height: 811
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2304
+        y: 2048
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 4072cc7547a2c7f70800000000000000
-      internalID: 9186264019106539268
+      spriteID: 879f3f0ba9913a742836b70f754c6cd8
+      internalID: -2099540625
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_4
+      name: Fenny_Run_03
       rect:
         serializedVersion: 2
-        x: 35
-        y: 1136
-        width: 519
-        height: 760
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 1024
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6d2465f28698d2520800000000000000
-      internalID: 2678948433919099606
+      spriteID: 311f33743aa4e7245a9ae61eadd17391
+      internalID: 2096598711
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_5
+      name: Fenny_Run_04
       rect:
         serializedVersion: 2
-        x: 767
-        y: 1090
-        width: 636
-        height: 820
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 1024
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: bec235e98633b18a0800000000000000
-      internalID: -6333411926540604181
+      spriteID: 5e2951698bb8eca418f44915c14f15f6
+      internalID: -604952600
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_6
+      name: Fenny_Run_05
       rect:
         serializedVersion: 2
-        x: 1719
-        y: 1082
-        width: 354
-        height: 799
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 1024
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 2d67b57762b6991a0800000000000000
-      internalID: -6802287949211011374
+      spriteID: 2588ac70afe3d0441af5809884d7a6a5
+      internalID: -744554827
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_7
+      name: Fenny_Run_06
       rect:
         serializedVersion: 2
-        x: 2375
-        y: 1092
-        width: 456
-        height: 802
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2304
+        y: 1024
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e6454b1889dbdc880800000000000000
-      internalID: -8589000451616910226
+      spriteID: 9ece977892f28af418e7856604b666ad
+      internalID: -1763351895
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_8
+      name: Fenny_Run_07
       rect:
         serializedVersion: 2
-        x: 50
-        y: 73
-        width: 582
-        height: 802
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c64fc99f4436d82d0800000000000000
-      internalID: -3274852206131743636
+      spriteID: 96df9de4906d2dc449cbaaabf0ba4703
+      internalID: -2053571497
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_9
+      name: Fenny_Rising
       rect:
         serializedVersion: 2
-        x: 997
-        y: 37
-        width: 390
-        height: 914
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 0
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 089c65161624d5c50800000000000000
-      internalID: 6655548810335799680
+      spriteID: 62ba95c2b4fad6c4485656b8fad43239
+      internalID: 29665550
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_10
+      name: Fenny_Apex
       rect:
         serializedVersion: 2
-        x: 1821
-        y: 178
-        width: 283
-        height: 770
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 0
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: cff18a4bdc561a320800000000000000
-      internalID: 2567445196751511548
+      spriteID: ffbe1d099adb26640b171728ff123138
+      internalID: -425113915
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_Frames_v008_11
+      name: Fenny_Falling
       rect:
         serializedVersion: 2
-        x: 2556
-        y: 91
-        width: 259
-        height: 857
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2304
+        y: 0
+        width: 768
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 51af90a7b362b22e0800000000000000
-      internalID: -2149582360246879723
+      spriteID: 951e5b7118e4b1949bbe130831fc843b
+      internalID: 1404692794
       vertices: []
       indices: 
       edges: []
@@ -400,7 +400,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 9189116fb08213246b0652886dac67e6
     internalID: 0
     vertices: []
     indices: 
@@ -410,18 +410,18 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      FennyGolden_Frames_v008_0: -7860853598833134742
-      FennyGolden_Frames_v008_1: 5542678148096148682
-      FennyGolden_Frames_v008_10: 2567445196751511548
-      FennyGolden_Frames_v008_11: -2149582360246879723
-      FennyGolden_Frames_v008_2: -2626401055089743450
-      FennyGolden_Frames_v008_3: 9186264019106539268
-      FennyGolden_Frames_v008_4: 2678948433919099606
-      FennyGolden_Frames_v008_5: -6333411926540604181
-      FennyGolden_Frames_v008_6: -6802287949211011374
-      FennyGolden_Frames_v008_7: -8589000451616910226
-      FennyGolden_Frames_v008_8: -3274852206131743636
-      FennyGolden_Frames_v008_9: 6655548810335799680
+      Fenny_Apex: -425113915
+      Fenny_Falling: 1404692794
+      Fenny_Idle_00: 836654564
+      Fenny_Rising: 29665550
+      Fenny_Run_00: -1759255303
+      Fenny_Run_01: 125847944
+      Fenny_Run_02: -2099540625
+      Fenny_Run_03: 2096598711
+      Fenny_Run_04: -604952600
+      Fenny_Run_05: -744554827
+      Fenny_Run_06: -1763351895
+      Fenny_Run_07: -2053571497
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

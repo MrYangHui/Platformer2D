@@ -12,7 +12,7 @@ namespace SnowbreakFan.Infrastructure.Editor
     public static class FennyFrameConfigurator
     {
         public const string AtlasPath =
-            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v007.png";
+            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v008.png";
         public const string ProfilePath =
             "Assets/Game/Config/Characters/FennyGoldenPresentation.asset";
         public const string PlayerPrefabPath =
