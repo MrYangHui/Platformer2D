@@ -12,7 +12,7 @@ namespace SnowbreakFan.Infrastructure.Editor
     public static class FennyFrameConfigurator
     {
         public const string AtlasPath =
-            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v006.png";
+            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v007.png";
         public const string ProfilePath =
             "Assets/Game/Config/Characters/FennyGoldenPresentation.asset";
         public const string PlayerPrefabPath =
@@ -20,13 +20,13 @@ namespace SnowbreakFan.Infrastructure.Editor
 
         private const int CellWidth = 768;
         private const int CellHeight = 1024;
-        private const int AtlasHeight = 4096;
+        private const int AtlasHeight = 3072;
         private const int Columns = 4;
         private const float PixelsPerUnit = 480f;
 
         private static readonly string[] FrameNames =
         {
-            "Fenny_Idle_00", "Fenny_Idle_01", "Fenny_Idle_02", "Fenny_Idle_03",
+            "Fenny_Idle_00",
             "Fenny_Run_00", "Fenny_Run_01", "Fenny_Run_02", "Fenny_Run_03",
             "Fenny_Run_04", "Fenny_Run_05", "Fenny_Run_06", "Fenny_Run_07",
             "Fenny_Rising", "Fenny_Apex", "Fenny_Falling"
@@ -124,7 +124,7 @@ namespace SnowbreakFan.Infrastructure.Editor
 
             SerializedObject serialized = new(profile);
             AssignFrames(serialized.FindProperty("idleFrames"), FrameNames.Take(1), sprites);
-            AssignFrames(serialized.FindProperty("runFrames"), FrameNames.Skip(4).Take(8), sprites);
+            AssignFrames(serialized.FindProperty("runFrames"), FrameNames.Skip(1).Take(8), sprites);
             serialized.FindProperty("risingFrame").objectReferenceValue = sprites["Fenny_Rising"];
             serialized.FindProperty("apexFrame").objectReferenceValue = sprites["Fenny_Apex"];
             serialized.FindProperty("fallingFrame").objectReferenceValue = sprites["Fenny_Falling"];

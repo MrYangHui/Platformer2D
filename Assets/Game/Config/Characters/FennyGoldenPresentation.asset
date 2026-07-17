@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: FennyGoldenPresentation
   m_EditorClassIdentifier: Game.Presentation::SnowbreakFan.Presentation.CharacterPresentationProfile
   idleFrames:
-  - {fileID: -713690151, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: 1421952196, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
   runFrames:
-  - {fileID: -152621632, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: 227043602, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: -2047168378, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: 1546869661, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: -1952722620, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: -1704136162, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: 288080261, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  - {fileID: -1188419574, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  risingFrame: {fileID: -134492116, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  apexFrame: {fileID: -1093783275, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  fallingFrame: {fileID: 556048899, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
-  fallbackFrame: {fileID: -713690151, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: -64770490, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  - {fileID: -1455612123, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  - {fileID: 1220155351, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  - {fileID: 443564874, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  - {fileID: 1059042014, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  - {fileID: 803115985, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  - {fileID: 193169178, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  - {fileID: 151929796, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  risingFrame: {fileID: -53471654, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  apexFrame: {fileID: -2048880693, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  fallingFrame: {fileID: 1290071022, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
+  fallbackFrame: {fileID: 1421952196, guid: 1cb194033f2d19f459943d24a4a77185, type: 3}
   idleFramesPerSecond: 4
   runFramesPerSecond: 16
   movementThreshold: 0.1

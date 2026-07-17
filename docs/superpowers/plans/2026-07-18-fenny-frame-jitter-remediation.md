@@ -295,6 +295,8 @@ Use 768×1024 destination cells, four columns, three rows, canonical head-pelvis
 
 The frame order is `Idle_00`, `Run_00`–`Run_07`, `Rising`, `Apex`, `Falling`.
 
+For v007, align all Run frames through explicit pelvis destinations `[440, 424, 432, 448, 440, 424, 432, 448]` at X=384. This preserves the two flight phases instead of forcing every boot onto the ground, yields a 24 px Y span and a 16 px maximum cyclic step, and keeps all corrections baked into the atlas.
+
 - [ ] **Step 2: Run normalization and require a clean budget pass**
 
 Run the normalizer with a contact-sheet output under `TestResults/FennyFrames/`. If any budget fails, return to Task 4 and replace the candidate; do not relax the approved values.

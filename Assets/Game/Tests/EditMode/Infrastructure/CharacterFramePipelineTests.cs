@@ -13,7 +13,7 @@ namespace SnowbreakFan.Infrastructure.Tests
     public sealed class CharacterFramePipelineTests
     {
         private const string AtlasPath =
-            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v006.png";
+            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v007.png";
         private const string ProfilePath =
             "Assets/Game/Config/Characters/FennyGoldenPresentation.asset";
         private const string PlayerPrefabPath =
@@ -181,7 +181,7 @@ namespace SnowbreakFan.Infrastructure.Tests
                 .OfType<Sprite>()
                 .OrderBy(sprite => sprite.name)
                 .ToArray();
-            Assert.That(sprites, Has.Length.EqualTo(15));
+            Assert.That(sprites, Has.Length.EqualTo(12));
             Assert.That(sprites.All(sprite => sprite.rect.size == new Vector2(768f, 1024f)),
                 Is.True);
             Assert.That(sprites.All(sprite => sprite.pixelsPerUnit == 480f), Is.True);
