@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: f4b1a3be12832684d93a55e2ecbfaea2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6564627492398766428
+    second: FennyGolden_RigParts_v005_0
+  - first:
+      213: -8218001462378244287
+    second: FennyGolden_RigParts_v005_1
+  - first:
+      213: 2935242276311571479
+    second: FennyGolden_RigParts_v005_2
+  - first:
+      213: -4404939804644653642
+    second: FennyGolden_RigParts_v005_3
+  - first:
+      213: 3210699311550426684
+    second: FennyGolden_RigParts_v005_4
+  - first:
+      213: 1329119118128284572
+    second: FennyGolden_RigParts_v005_5
+  - first:
+      213: -6624085405007838199
+    second: FennyGolden_RigParts_v005_6
+  - first:
+      213: -3342290886699283887
+    second: FennyGolden_RigParts_v005_7
+  - first:
+      213: -3171823494329522926
+    second: FennyGolden_RigParts_v005_8
+  - first:
+      213: 4365629357082988467
+    second: FennyGolden_RigParts_v005_9
+  - first:
+      213: 5715316593517199543
+    second: FennyGolden_RigParts_v005_10
+  - first:
+      213: 535102247576752090
+    second: FennyGolden_RigParts_v005_11
+  - first:
+      213: 272743430389040695
+    second: FennyGolden_RigParts_v005_12
+  - first:
+      213: -8359341627758410174
+    second: FennyGolden_RigParts_v005_13
+  - first:
+      213: 9033961905964543822
+    second: FennyGolden_RigParts_v005_14
+  - first:
+      213: 6267052307380173355
+    second: FennyGolden_RigParts_v005_15
+  - first:
+      213: 756407336468183767
+    second: FennyGolden_RigParts_v005_16
+  - first:
+      213: -8767565784026905031
+    second: FennyGolden_RigParts_v005_17
+  - first:
+      213: 4907295885966248453
+    second: FennyGolden_RigParts_v005_18
+  - first:
+      213: 2591735803195177871
+    second: FennyGolden_RigParts_v005_19
+  - first:
+      213: 3859562923351256504
+    second: FennyGolden_RigParts_v005_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_0
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 849
+        width: 179
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5911376ced3a1b50800000000000000
+      internalID: 6564627492398766428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_1
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 864
+        width: 200
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 147dd47f53bc3fd80800000000000000
+      internalID: -8218001462378244287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_2
+      rect:
+        serializedVersion: 2
+        x: 581
+        y: 843
+        width: 118
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71c92497c431cb820800000000000000
+      internalID: 2935242276311571479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_3
+      rect:
+        serializedVersion: 2
+        x: 856
+        y: 838
+        width: 80
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b54d2706928ed2c0800000000000000
+      internalID: -4404939804644653642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_4
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 845
+        width: 96
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3eed894302be8c20800000000000000
+      internalID: 3210699311550426684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_5
+      rect:
+        serializedVersion: 2
+        x: 1367
+        y: 846
+        width: 82
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c938734cbcaf17210800000000000000
+      internalID: 1329119118128284572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_6
+      rect:
+        serializedVersion: 2
+        x: 1587
+        y: 837
+        width: 153
+        height: 246
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90488a88b658214a0800000000000000
+      internalID: -6624085405007838199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_7
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 513
+        width: 148
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15a8342952ccd91d0800000000000000
+      internalID: -3342290886699283887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_8
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 473
+        width: 187
+        height: 208
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2152042465b6bf3d0800000000000000
+      internalID: -3171823494329522926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_9
+      rect:
+        serializedVersion: 2
+        x: 545
+        y: 479
+        width: 190
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bfc2f925c4d59c30800000000000000
+      internalID: 4365629357082988467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_10
+      rect:
+        serializedVersion: 2
+        x: 819
+        y: 407
+        width: 152
+        height: 338
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b00d772922e05f40800000000000000
+      internalID: 5715316593517199543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_11
+      rect:
+        serializedVersion: 2
+        x: 1101
+        y: 458
+        width: 101
+        height: 237
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adf4359b8a01d6700800000000000000
+      internalID: 535102247576752090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_12
+      rect:
+        serializedVersion: 2
+        x: 1373
+        y: 447
+        width: 69
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 736092374baf8c300800000000000000
+      internalID: 272743430389040695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_13
+      rect:
+        serializedVersion: 2
+        x: 1607
+        y: 463
+        width: 114
+        height: 226
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24603594417adfb80800000000000000
+      internalID: -8359341627758410174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_14
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 53
+        width: 73
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4f6d6f4d741f5d70800000000000000
+      internalID: 9033961905964543822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_15
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 55
+        width: 88
+        height: 274
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2aff2a8eda09f650800000000000000
+      internalID: 6267052307380173355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_16
+      rect:
+        serializedVersion: 2
+        x: 606
+        y: 60
+        width: 67
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7da7fa3077c4f7a00800000000000000
+      internalID: 756407336468183767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_17
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 90
+        width: 135
+        height: 205
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 936053a3f59535680800000000000000
+      internalID: -8767565784026905031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_18
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 61
+        width: 118
+        height: 263
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50a01cabb973a1440800000000000000
+      internalID: 4907295885966248453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_19
+      rect:
+        serializedVersion: 2
+        x: 1371
+        y: 58
+        width: 74
+        height: 269
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8b3c1d3bf1b7f320800000000000000
+      internalID: 2591735803195177871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FennyGolden_RigParts_v005_20
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 92
+        width: 127
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bdae9aa70cef8530800000000000000
+      internalID: 3859562923351256504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FennyGolden_RigParts_v005_0: 6564627492398766428
+      FennyGolden_RigParts_v005_1: -8218001462378244287
+      FennyGolden_RigParts_v005_10: 5715316593517199543
+      FennyGolden_RigParts_v005_11: 535102247576752090
+      FennyGolden_RigParts_v005_12: 272743430389040695
+      FennyGolden_RigParts_v005_13: -8359341627758410174
+      FennyGolden_RigParts_v005_14: 9033961905964543822
+      FennyGolden_RigParts_v005_15: 6267052307380173355
+      FennyGolden_RigParts_v005_16: 756407336468183767
+      FennyGolden_RigParts_v005_17: -8767565784026905031
+      FennyGolden_RigParts_v005_18: 4907295885966248453
+      FennyGolden_RigParts_v005_19: 2591735803195177871
+      FennyGolden_RigParts_v005_2: 2935242276311571479
+      FennyGolden_RigParts_v005_20: 3859562923351256504
+      FennyGolden_RigParts_v005_3: -4404939804644653642
+      FennyGolden_RigParts_v005_4: 3210699311550426684
+      FennyGolden_RigParts_v005_5: 1329119118128284572
+      FennyGolden_RigParts_v005_6: -6624085405007838199
+      FennyGolden_RigParts_v005_7: -3342290886699283887
+      FennyGolden_RigParts_v005_8: -3171823494329522926
+      FennyGolden_RigParts_v005_9: 4365629357082988467
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
