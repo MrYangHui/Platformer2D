@@ -3,7 +3,8 @@
   "rootNamespace": "SnowbreakFan.Infrastructure.Tests",
   "references": [
     "Game.Infrastructure.Editor",
-    "Game.Presentation"
+    "Game.Presentation",
+    "Game.Player"
   ],
   "includePlatforms": [
     "Editor"

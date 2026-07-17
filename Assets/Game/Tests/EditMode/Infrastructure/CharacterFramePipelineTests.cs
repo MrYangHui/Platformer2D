@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
+using SnowbreakFan.Player;
 using SnowbreakFan.Presentation;
 using UnityEditor;
 using UnityEngine;
@@ -96,6 +97,61 @@ namespace SnowbreakFan.Infrastructure.Tests
                     BindingFlags.Instance | BindingFlags.NonPublic) != null), Is.False);
         }
 
+        [Test]
+        public void AdapterExposesOnlyFixedPresentationDependencies()
+        {
+            string[] required = { "profile", "targetRenderer", "visualRoot", "body", "motor" };
+            string[] forbidden = { "runFrameOffsets", "frameScales", "airborneOffset" };
+            foreach (string name in required)
+            {
+                Assert.That(typeof(PlayerFramePresentation2D).GetField(
+                    name,
+                    BindingFlags.Instance | BindingFlags.NonPublic), Is.Not.Null, name);
+            }
+            Assert.That(forbidden.Any(name => typeof(PlayerFramePresentation2D).GetField(
+                name,
+                BindingFlags.Instance | BindingFlags.NonPublic) != null), Is.False);
+        }
+
+        [Test]
+        public void AdapterSelectsRunAndApexFramesWithoutPerFrameTransformWrites()
+        {
+            GameObject root = new("Player");
+            cleanup.Add(root);
+            Rigidbody2D body = root.AddComponent<Rigidbody2D>();
+            PlayerMotor2D motor = root.AddComponent<PlayerMotor2D>();
+            motor.enabled = false;
+            GameObject visualObject = new("Visual");
+            visualObject.transform.SetParent(root.transform, false);
+            SpriteRenderer renderer = visualObject.AddComponent<SpriteRenderer>();
+            PlayerFramePresentation2D adapter = root.AddComponent<PlayerFramePresentation2D>();
+            CharacterPresentationProfile profile = CreateValidProfile();
+            SerializedObject serialized = new(adapter);
+            serialized.FindProperty("profile").objectReferenceValue = profile;
+            serialized.FindProperty("targetRenderer").objectReferenceValue = renderer;
+            serialized.FindProperty("visualRoot").objectReferenceValue = visualObject.transform;
+            serialized.FindProperty("body").objectReferenceValue = body;
+            serialized.FindProperty("motor").objectReferenceValue = motor;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            InvokePrivate(adapter, "Awake");
+            Vector3 fixedPosition = visualObject.transform.localPosition;
+            Vector3 fixedScale = visualObject.transform.localScale;
+            SetMotorState(motor, PlayerMotionState.Grounded);
+            body.linearVelocity = new Vector2(4f, 0f);
+            InvokePrivate(adapter, "Update");
+            Assert.That(renderer.sprite.name, Does.StartWith("Run_"));
+            Assert.That(renderer.flipX, Is.False);
+
+            SetMotorState(motor, PlayerMotionState.Rising);
+            body.linearVelocity = new Vector2(-0.2f, 0.2f);
+            InvokePrivate(adapter, "Update");
+            Assert.That(renderer.sprite.name, Is.EqualTo("Apex"));
+            Assert.That(renderer.flipX, Is.True);
+            Assert.That(visualObject.transform.localPosition, Is.EqualTo(fixedPosition));
+            Assert.That(visualObject.transform.localScale, Is.EqualTo(fixedScale));
+        }
+
         private CharacterPresentationProfile CreateValidProfile()
         {
             CharacterPresentationProfile profile =
@@ -130,6 +186,22 @@ namespace SnowbreakFan.Infrastructure.Tests
             cleanup.Add(sprite);
             cleanup.Add(texture);
             return sprite;
+        }
+
+        private static void InvokePrivate(object target, string methodName)
+        {
+            MethodInfo method = target.GetType().GetMethod(
+                methodName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null, methodName);
+            method.Invoke(target, null);
+        }
+
+        private static void SetMotorState(PlayerMotor2D motor, PlayerMotionState state)
+        {
+            typeof(PlayerMotor2D).GetProperty(nameof(PlayerMotor2D.State))
+                .GetSetMethod(true)
+                .Invoke(motor, new object[] { state });
         }
     }
 }
