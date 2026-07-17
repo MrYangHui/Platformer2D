@@ -331,7 +331,7 @@ def normalize(manifest_path: Path) -> NormalizationResult:
         if alpha_box is None:
             raise ValueError(f"Frame '{name}' has no opaque pixels")
         cropped = source_cell.crop(alpha_box)
-        scale = float(canonical) / measured
+        scale = float(canonical) / (source_reference or measured)
         scaled_size = (
             max(1, round(cropped.width * scale)),
             max(1, round(cropped.height * scale)),

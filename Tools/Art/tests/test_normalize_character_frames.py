@@ -137,6 +137,23 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
 
         self.assertEqual(frame.head_anchor[1] - frame.pelvis_anchor[1], 50)
 
+    def test_source_reference_applies_one_scale_to_every_frame(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["frames"][0]["anchors"]["pelvis"] = [32, 50]
+        data["frames"][0]["anchors"]["head"] = [32, 99]
+        data["frames"][1]["anchors"]["pelvis"] = [32, 50]
+        data["frames"][1]["anchors"]["head"] = [32, 101]
+        path = self.root / "single-source-scale.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        result = normalize(path)
+        distances = [
+            result.frames[name].head_anchor[1] - result.frames[name].pelvis_anchor[1]
+            for name in ("Idle_00", "Idle_01")
+        ]
+
+        self.assertEqual(distances, [49, 51])
+
     def test_optional_largest_component_filter_removes_grid_leakage(self) -> None:
         with Image.open(self.source_path) as opened:
             sheet = opened.convert("RGBA")
