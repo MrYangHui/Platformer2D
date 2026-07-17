@@ -253,7 +253,7 @@ git commit -m "feat: add looping frozen-zone parallax"
 - Consumes: Player Visual SpriteRenderer, Rigidbody2D, PlayerMotor2D, four Idle Sprites, eight Run Sprites, and one airborne Sprite.
 - Produces: configured player prefab with a presentation-only adapter and no physics changes.
 
-- [ ] **Step 1: Write the failing player-art configuration test**
+- [x] **Step 1: Write the failing player-art configuration test**
 
 Add a test that loads the level and asserts by component name so it compiles before the type exists:
 
@@ -276,7 +276,7 @@ public IEnumerator PlayerUsesConfiguredFennyPresentationWithoutPhysicsChanges()
 
 Expected RED: adapter is missing and the renderer uses the built-in placeholder sprite.
 
-- [ ] **Step 2: Add the minimal adapter and configure the prefab**
+- [x] **Step 2: Add the minimal adapter and configure the prefab**
 
 Create `PlayerSpriteAnimator2D` with serialized fields:
 
@@ -296,7 +296,7 @@ At this step `Awake` only validates references and assigns `idleFrames[0]`; anim
 
 Extend the editor configurator to load the Player prefab, reset `Visual` scale to one, set local position `(0,-0.9,0)`, assign Idle frame 0, white tint, Simple draw mode, Player sorting layer, add/configure `PlayerSpriteAnimator2D` on the root, and serialize the four Idle and eight Run frames in name order. Set `airborneFrame` to Run frame index 3. Save the prefab without changing Rigidbody2D, CapsuleCollider2D, GroundProbe, PlayerMotor2D, or PlayerMovementConfig.
 
-- [ ] **Step 3: Run configurator and verify configuration GREEN**
+- [x] **Step 3: Run configurator and verify configuration GREEN**
 
 Run the configurator, then the focused player configuration test. Expected: Fenny is assigned and all physics assertions remain unchanged.
 
@@ -312,13 +312,13 @@ Run the configurator, then the focused player configuration test. Expected: Fenn
 - Consumes: `Time.deltaTime`, `body.linearVelocity.x`, and `motor.State`.
 - Produces: deterministic frame cycling, stable airborne hold, and SpriteRenderer horizontal flip.
 
-- [ ] **Step 1: Write the failing runtime animation test**
+- [x] **Step 1: Write the failing runtime animation test**
 
 Load the scene, obtain the player adapter by concrete type, disable `PlayerMotor2D`, set horizontal velocity to `4`, wait `0.2` seconds, and assert the Sprite changed to a Run frame. Then set velocity to `-4`, yield a frame and assert `flipX` is true. Finally set velocity to zero, wait `0.3` seconds and assert the Sprite name starts with `FennyGolden_IdlePoses`.
 
 Expected RED: the minimal adapter remains on Idle frame 0 and never flips.
 
-- [ ] **Step 2: Implement minimal animation state**
+- [x] **Step 2: Implement minimal animation state**
 
 Add `elapsed`, `wasRunning`, and `facingRight` fields. `Update` must:
 
@@ -330,11 +330,11 @@ Add `elapsed`, `wasRunning`, and `facingRight` fields. `Update` must:
 
 The component validates non-empty frame arrays and positive FPS in `Awake`; invalid setup logs one error and disables only itself.
 
-- [ ] **Step 3: Verify animation GREEN and presentation regression**
+- [x] **Step 3: Verify animation GREEN and presentation regression**
 
 Run the focused runtime animation test and all PlayMode tests. Expected: temporary Idle/Run/facing works and gameplay tests remain green.
 
-- [ ] **Step 4: Commit the character milestone**
+- [x] **Step 4: Commit the character milestone**
 
 ```bash
 git add Assets/Game/Scripts/Presentation Assets/Game/Scripts/Infrastructure/Editor/ArtIntegrationConfigurator.cs Assets/Game/Prefabs/Player/Player.prefab Assets/Game/Tests/PlayMode/VerticalSliceSmokeTests.cs

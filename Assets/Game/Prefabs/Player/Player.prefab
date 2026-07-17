@@ -62,6 +62,7 @@ GameObject:
   - component: {fileID: 2490836344619944289}
   - component: {fileID: 555633563281751258}
   - component: {fileID: 8937308272023160075}
+  - component: {fileID: 7452672221607171236}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -190,9 +191,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9bdf6c3dfbd0120428db81a8f80e1181, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Game.Player::SnowbreakFan.Player.PlayerRespawnTarget
   motor: {fileID: 555633563281751258}
+--- !u!114 &7452672221607171236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4389958313304831977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cae2915d30bc6e4cbbed096801476ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Presentation::SnowbreakFan.Presentation.PlayerSpriteAnimator2D
+  targetRenderer: {fileID: 5321301857323971154}
+  body: {fileID: 7799488457214679804}
+  motor: {fileID: 555633563281751258}
+  idleFrames:
+  - {fileID: -8680967059778190003, guid: bc3c09d7ca69cd84b86b7a622b484ae4, type: 3}
+  - {fileID: 4911455261934943929, guid: bc3c09d7ca69cd84b86b7a622b484ae4, type: 3}
+  - {fileID: -7150570329238180608, guid: bc3c09d7ca69cd84b86b7a622b484ae4, type: 3}
+  - {fileID: -6854454952041558324, guid: bc3c09d7ca69cd84b86b7a622b484ae4, type: 3}
+  runFrames:
+  - {fileID: -1179431448905228394, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  - {fileID: 9094047214721892352, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  - {fileID: 4311027830932687653, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  - {fileID: 2779565527603438502, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  - {fileID: -4878288095803826171, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  - {fileID: 6854535827153733673, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  - {fileID: -8675062129541717262, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  - {fileID: 1824855541123340379, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  airborneFrame: {fileID: 2779565527603438502, guid: 39106de02f872744cb010d55639b143e, type: 3}
+  idleFramesPerSecond: 4
+  runFramesPerSecond: 12
+  movementThreshold: 0.1
 --- !u!1 &7314743237029618837
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,8 +284,8 @@ Transform:
   m_GameObject: {fileID: 7953613400332979114}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 1.6, z: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 808271133233215031}
@@ -301,12 +335,12 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 11006
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.35, b: 0.08, a: 1}
+  m_Sprite: {fileID: -8680967059778190003, guid: bc3c09d7ca69cd84b86b7a622b484ae4, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

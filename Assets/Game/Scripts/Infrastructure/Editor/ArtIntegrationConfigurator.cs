@@ -1,4 +1,5 @@
 using System.Linq;
+using SnowbreakFan.Player;
 using SnowbreakFan.Presentation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -10,6 +11,11 @@ namespace SnowbreakFan.Infrastructure.Editor
     public static class ArtIntegrationConfigurator
     {
         private const string LevelScenePath = "Assets/Game/Scenes/10_Level_Prototype.unity";
+        private const string PlayerPrefabPath = "Assets/Game/Prefabs/Player/Player.prefab";
+        private const string FennyIdlePath =
+            "Assets/Game/Art/Characters/Player/FennyGolden_IdlePoses_Candidate_v003.png";
+        private const string FennyRunPath =
+            "Assets/Game/Art/Characters/Player/FennyGolden_RunPoses_Candidate_v003.png";
 
         private readonly struct PlatformBinding
         {
@@ -124,6 +130,7 @@ namespace SnowbreakFan.Infrastructure.Editor
                 ConfigurePlatform(binding);
 
             ConfigureBackgrounds();
+            ConfigurePlayer();
 
             AssetDatabase.SaveAssets();
         }
@@ -160,16 +167,15 @@ namespace SnowbreakFan.Infrastructure.Editor
             Scene scene = EditorSceneManager.OpenScene(LevelScenePath, OpenSceneMode.Single);
             GameObject existing = scene.GetRootGameObjects()
                 .FirstOrDefault(item => item.name == "EnvironmentVisuals");
-            if (existing != null)
-                Object.DestroyImmediate(existing);
 
             Transform cameraTransform = scene.GetRootGameObjects()
                 .SelectMany(item => item.GetComponentsInChildren<Camera>(true))
                 .Single(item => item.CompareTag("MainCamera"))
                 .transform;
 
-            GameObject root = new("EnvironmentVisuals");
-            SceneManager.MoveGameObjectToScene(root, scene);
+            GameObject root = existing != null ? existing : new GameObject("EnvironmentVisuals");
+            if (existing == null)
+                SceneManager.MoveGameObjectToScene(root, scene);
 
             foreach (BackgroundBinding binding in BackgroundBindings)
                 CreateBackgroundLayer(root.transform, cameraTransform, binding);
@@ -184,20 +190,30 @@ namespace SnowbreakFan.Infrastructure.Editor
             BackgroundBinding binding)
         {
             Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(binding.SpritePath);
-            GameObject layerObject = new(binding.Name);
-            layerObject.transform.SetParent(parent, false);
+            Transform existingLayer = parent.Find(binding.Name);
+            GameObject layerObject = existingLayer != null
+                ? existingLayer.gameObject
+                : new GameObject(binding.Name);
+            if (existingLayer == null)
+                layerObject.transform.SetParent(parent, false);
             layerObject.transform.position = new Vector3(0f, binding.OriginY, 0f);
 
             SpriteRenderer[] segments = new SpriteRenderer[3];
             float tileWidth = sprite.bounds.size.x * binding.Scale;
             for (int index = 0; index < segments.Length; index++)
             {
-                GameObject segmentObject = new($"Segment_{index}");
-                segmentObject.transform.SetParent(layerObject.transform, false);
+                Transform existingSegment = layerObject.transform.Find($"Segment_{index}");
+                GameObject segmentObject = existingSegment != null
+                    ? existingSegment.gameObject
+                    : new GameObject($"Segment_{index}");
+                if (existingSegment == null)
+                    segmentObject.transform.SetParent(layerObject.transform, false);
                 segmentObject.transform.localPosition = new Vector3((index - 1) * tileWidth, 0f, 0f);
                 segmentObject.transform.localScale = Vector3.one * binding.Scale;
 
-                SpriteRenderer renderer = segmentObject.AddComponent<SpriteRenderer>();
+                SpriteRenderer renderer = segmentObject.GetComponent<SpriteRenderer>();
+                if (renderer == null)
+                    renderer = segmentObject.AddComponent<SpriteRenderer>();
                 renderer.sprite = sprite;
                 renderer.color = binding.Color;
                 renderer.sortingLayerName = binding.SortingLayer;
@@ -205,7 +221,9 @@ namespace SnowbreakFan.Infrastructure.Editor
                 segments[index] = renderer;
             }
 
-            ParallaxLayer2D layer = layerObject.AddComponent<ParallaxLayer2D>();
+            ParallaxLayer2D layer = layerObject.GetComponent<ParallaxLayer2D>();
+            if (layer == null)
+                layer = layerObject.AddComponent<ParallaxLayer2D>();
             SerializedObject serialized = new(layer);
             serialized.FindProperty("cameraTransform").objectReferenceValue = cameraTransform;
             SerializedProperty segmentProperty = serialized.FindProperty("segments");
@@ -217,6 +235,67 @@ namespace SnowbreakFan.Infrastructure.Editor
             serialized.FindProperty("tileWidth").floatValue = tileWidth;
             serialized.FindProperty("overlap").floatValue = 0.2f;
             serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void ConfigurePlayer()
+        {
+            Sprite[] idleFrames = LoadSprites(FennyIdlePath);
+            Sprite[] runFrames = LoadSprites(FennyRunPath);
+            GameObject root = PrefabUtility.LoadPrefabContents(PlayerPrefabPath);
+
+            try
+            {
+                Rigidbody2D body = root.GetComponent<Rigidbody2D>();
+                PlayerMotor2D motor = root.GetComponent<PlayerMotor2D>();
+                Transform visual = root.transform.Find("Visual");
+                SpriteRenderer renderer = visual.GetComponent<SpriteRenderer>();
+
+                visual.localPosition = new Vector3(0f, -0.9f, 0f);
+                visual.localRotation = Quaternion.identity;
+                visual.localScale = Vector3.one;
+                renderer.sprite = idleFrames[0];
+                renderer.color = Color.white;
+                renderer.drawMode = SpriteDrawMode.Simple;
+                renderer.sortingLayerName = "Player";
+                renderer.flipX = false;
+
+                PlayerSpriteAnimator2D animator = root.GetComponent<PlayerSpriteAnimator2D>();
+                if (animator == null)
+                    animator = root.AddComponent<PlayerSpriteAnimator2D>();
+
+                SerializedObject serialized = new(animator);
+                serialized.FindProperty("targetRenderer").objectReferenceValue = renderer;
+                serialized.FindProperty("body").objectReferenceValue = body;
+                serialized.FindProperty("motor").objectReferenceValue = motor;
+                AssignSprites(serialized.FindProperty("idleFrames"), idleFrames);
+                AssignSprites(serialized.FindProperty("runFrames"), runFrames);
+                serialized.FindProperty("airborneFrame").objectReferenceValue = runFrames[3];
+                serialized.FindProperty("idleFramesPerSecond").floatValue = 4f;
+                serialized.FindProperty("runFramesPerSecond").floatValue = 12f;
+                serialized.FindProperty("movementThreshold").floatValue = 0.1f;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+
+                PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefabPath);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+
+        private static Sprite[] LoadSprites(string assetPath)
+        {
+            return AssetDatabase.LoadAllAssetsAtPath(assetPath)
+                .OfType<Sprite>()
+                .OrderBy(sprite => sprite.name)
+                .ToArray();
+        }
+
+        private static void AssignSprites(SerializedProperty property, Sprite[] sprites)
+        {
+            property.arraySize = sprites.Length;
+            for (int index = 0; index < sprites.Length; index++)
+                property.GetArrayElementAtIndex(index).objectReferenceValue = sprites[index];
         }
     }
 }
