@@ -31,12 +31,11 @@
 - Consumes: Player prefab, current `PlayerSpriteAnimator2D`, airborne asset path.
 - Produces: `FennyAirborneAndPrefabUseStablePresentationCalibration()` regression contract.
 
-- [ ] **Step 1: Add the failing configuration test**
+- [x] **Step 1: Add the failing configuration test**
 
 Add these imports if absent:
 
 ```csharp
-using SnowbreakFan.Presentation;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools.Utils;
@@ -61,7 +60,8 @@ public void FennyAirborneAndPrefabUseStablePresentationCalibration()
     try
     {
         Transform visual = root.transform.Find("Visual");
-        PlayerSpriteAnimator2D animator = root.GetComponent<PlayerSpriteAnimator2D>();
+        Component animator = root.GetComponent("PlayerSpriteAnimator2D");
+        Assert.That(animator, Is.Not.Null);
         SerializedObject serialized = new(animator);
         SerializedProperty offsets = serialized.FindProperty("runFrameOffsets");
 
@@ -92,7 +92,7 @@ public void FennyAirborneAndPrefabUseStablePresentationCalibration()
 }
 ```
 
-- [ ] **Step 2: Run the focused EditMode test and verify RED**
+- [x] **Step 2: Run the focused EditMode test and verify RED**
 
 Run Unity without `-quit`:
 
@@ -118,7 +118,7 @@ Poll the Unity process, then inspect the XML. Expected: one failure because the 
 - Consumes: Idle and Run candidate sheets as identity/style references.
 - Produces: one cropped alpha PNG containing the dedicated right-facing airborne pose.
 
-- [ ] **Step 1: Generate the chroma-key source with the built-in image tool**
+- [x] **Step 1: Generate the chroma-key source with the built-in image tool**
 
 Call built-in image generation with these reference paths:
 
@@ -148,7 +148,7 @@ Save the tool result to:
 Temp/ImageGen/FennyGolden_Airborne_Candidate_v004_chroma.png
 ```
 
-- [ ] **Step 2: Remove chroma key and crop to the alpha bounds**
+- [x] **Step 2: Remove chroma key and crop to the alpha bounds**
 
 Use the bundled Python runtime:
 
@@ -191,7 +191,7 @@ image.crop((left, top, right, bottom)).save(target)
 '@ | & 'C:\Users\TUDOU\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -
 ```
 
-- [ ] **Step 3: Inspect the result before integration**
+- [x] **Step 3: Inspect the result before integration**
 
 Use `view_image` on the final project PNG. Verify the red-stocking leg is deeply bent, the bare leg hangs naturally with a slight bend, identity/outfit are preserved, all limbs are singular, corners are transparent, and no magenta fringe is visible. If only a thin fringe remains, repeat chroma removal once with `--edge-contract 1`; do not switch to CLI/native transparency without user confirmation.
 
@@ -210,7 +210,7 @@ Use `view_image` on the final project PNG. Verify the red-stocking leg is deeply
 - Consumes: v004 airborne PNG and eight existing Run frames.
 - Produces: serialized `visualRoot`, `baseVisualLocalPosition`, `runFrameOffsets`, and `airborneOffset` fields.
 
-- [ ] **Step 1: Add the presentation calibration fields and validation**
+- [x] **Step 1: Add the presentation calibration fields and validation**
 
 Add these serialized fields to `PlayerSpriteAnimator2D`:
 
@@ -234,7 +234,7 @@ Keep behavior unchanged in this task except assigning:
 visualRoot.localPosition = baseVisualLocalPosition;
 ```
 
-- [ ] **Step 2: Add deterministic airborne import configuration**
+- [x] **Step 2: Add deterministic airborne import configuration**
 
 Add to `ArtIntegrationConfigurator`:
 
@@ -279,7 +279,7 @@ private static void ConfigureAirborneImporter()
 }
 ```
 
-- [ ] **Step 3: Serialize the new calibration into the Player prefab**
+- [x] **Step 3: Serialize the new calibration into the Player prefab**
 
 In `ConfigurePlayer()` load:
 
@@ -310,7 +310,7 @@ private static void AssignVectors(SerializedProperty property, Vector2[] values)
 }
 ```
 
-- [ ] **Step 4: Run the configurator and verify the focused EditMode test GREEN**
+- [x] **Step 4: Run the configurator and verify the focused EditMode test GREEN**
 
 Run:
 
@@ -335,7 +335,7 @@ Then rerun the Task 1 focused test to `TestResults/FennyPolishTask3Green.xml`. E
 - Consumes: current frame index, last facing direction, serialized offsets, Player motion state.
 - Produces: `ApplyFrame(Sprite sprite, Vector2 offset)` presentation behavior.
 
-- [ ] **Step 1: Extend the PlayMode test to verify RED**
+- [x] **Step 1: Extend the PlayMode test to verify RED**
 
 In `FennyPresentationCyclesRunAndPreservesFacingAtIdle()`, after the existing rightward Run wait add:
 
@@ -376,7 +376,7 @@ Assert.That(renderer.sprite.name, Does.StartWith("FennyGolden_Airborne_Candidate
 
 Run only this PlayMode test to `TestResults/FennyPolishTask4Red.xml`. Expected: failure because the current component never applies Run frame offsets.
 
-- [ ] **Step 2: Implement the minimal frame application helper**
+- [x] **Step 2: Implement the minimal frame application helper**
 
 Add:
 
@@ -408,11 +408,11 @@ In `Awake`, replace the initial direct assignment with:
 ApplyFrame(idleFrames[0], Vector2.zero);
 ```
 
-- [ ] **Step 3: Verify runtime GREEN and presentation regression**
+- [x] **Step 3: Verify runtime GREEN and presentation regression**
 
 Rerun the focused PlayMode test to `TestResults/FennyPolishTask4Green.xml`, then run the entire `VerticalSliceSmokeTests` fixture. Expected: dedicated airborne frame, mirrored correction, Idle reset, physics assertions, and all fixture tests pass.
 
-- [ ] **Step 4: Commit the character polish milestone**
+- [x] **Step 4: Commit the character polish milestone**
 
 ```powershell
 git add -- 'Assets/Game/Art/Characters/Player/FennyGolden_Airborne_Candidate_v004.png' `

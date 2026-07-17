@@ -5,6 +5,7 @@ using SnowbreakFan.Presentation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.TestTools.Utils;
 
 namespace SnowbreakFan.Tests.PlayMode
 {
@@ -74,15 +75,28 @@ namespace SnowbreakFan.Tests.PlayMode
             Assert.That(renderer.sprite.name, Does.StartWith("FennyGolden_RunPoses"));
             Assert.That(renderer.sprite, Is.Not.SameAs(idleFrame));
             Assert.That(renderer.flipX, Is.False);
+            Assert.That(renderer.transform.localPosition.x, Is.LessThan(-0.1f));
 
             body.linearVelocity = new Vector2(-4f, 0f);
             yield return null;
             Assert.That(renderer.flipX, Is.True);
+            Assert.That(renderer.transform.localPosition.x, Is.GreaterThan(0.1f));
 
             body.linearVelocity = Vector2.zero;
             yield return new WaitForSeconds(0.3f);
             Assert.That(renderer.sprite.name, Does.StartWith("FennyGolden_IdlePoses"));
             Assert.That(renderer.flipX, Is.True);
+            Assert.That(renderer.transform.localPosition,
+                Is.EqualTo(new Vector3(0f, -0.95f, 0f))
+                    .Using(Vector3ComparerWithEqualsOperator.Instance));
+
+            typeof(PlayerMotor2D).GetProperty(nameof(PlayerMotor2D.State))
+                .GetSetMethod(true)
+                .Invoke(motor, new object[] { PlayerMotionState.Rising });
+            body.linearVelocity = new Vector2(0f, 5f);
+            yield return null;
+            Assert.That(renderer.sprite.name,
+                Does.StartWith("FennyGolden_Airborne_Candidate_v004"));
         }
     }
 }

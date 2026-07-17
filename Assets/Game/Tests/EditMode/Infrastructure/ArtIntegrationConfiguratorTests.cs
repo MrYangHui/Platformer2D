@@ -2,6 +2,7 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TestTools.Utils;
 
 namespace SnowbreakFan.Infrastructure.Tests
 {
@@ -52,6 +53,56 @@ namespace SnowbreakFan.Infrastructure.Tests
                 Is.EqualTo(1.91f).Within(0.08f));
             Assert.That(run.Average(sprite => sprite.bounds.size.y),
                 Is.EqualTo(1.91f).Within(0.08f));
+        }
+
+        [Test]
+        public void FennyAirborneAndPrefabUseStablePresentationCalibration()
+        {
+            const string airbornePath =
+                "Assets/Game/Art/Characters/Player/FennyGolden_Airborne_Candidate_v004.png";
+            const string playerPath = "Assets/Game/Prefabs/Player/Player.prefab";
+
+            Sprite airborne = AssetDatabase.LoadAssetAtPath<Sprite>(airbornePath);
+            Assert.That(airborne, Is.Not.Null);
+            Assert.That(airborne.pivot.y, Is.LessThanOrEqualTo(0.01f));
+            Assert.That(airborne.bounds.size.y, Is.EqualTo(1.91f).Within(0.03f));
+
+            GameObject root = PrefabUtility.LoadPrefabContents(playerPath);
+            try
+            {
+                Transform visual = root.transform.Find("Visual");
+                Component animator = root.GetComponent("PlayerSpriteAnimator2D");
+                Assert.That(animator, Is.Not.Null);
+                SerializedObject serialized = new(animator);
+                SerializedProperty offsets = serialized.FindProperty("runFrameOffsets");
+
+                Assert.That(visual.localPosition, Is.EqualTo(new Vector3(0f, -0.95f, 0f)));
+                Assert.That(serialized.FindProperty("runFramesPerSecond").floatValue, Is.EqualTo(16f));
+                Assert.That(serialized.FindProperty("airborneFrame").objectReferenceValue, Is.SameAs(airborne));
+                Assert.That(offsets.arraySize, Is.EqualTo(8));
+
+                Vector2[] expected =
+                {
+                    new(0.009259f, 0f),
+                    new(-0.046296f, 0f),
+                    new(-0.159722f, 0f),
+                    new(-0.328704f, 0f),
+                    new(-0.041667f, 0f),
+                    new(-0.106481f, 0f),
+                    new(-0.215278f, 0f),
+                    new(-0.349537f, 0f)
+                };
+                for (int index = 0; index < expected.Length; index++)
+                {
+                    Assert.That(offsets.GetArrayElementAtIndex(index).vector2Value,
+                        Is.EqualTo(expected[index])
+                            .Using(Vector2ComparerWithEqualsOperator.Instance));
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
         }
 
         private static Sprite[] LoadSprites(string path) =>
