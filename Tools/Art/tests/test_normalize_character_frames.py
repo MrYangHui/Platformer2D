@@ -93,6 +93,19 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
         frame = result.frames["Idle_00"]
         self.assertEqual(frame.sole_anchor[1], 12)
 
+    def test_grounded_frame_centers_pelvis_x_and_places_sole_y(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["frames"][0]["anchors"]["sole"] = [24, 16]
+        data["frames"][0]["anchors"]["pelvis"] = [32, 66]
+        data["frames"][0]["anchors"]["head"] = [32, 116]
+        path = self.root / "split-grounded-anchors.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        frame = normalize(path).frames["Idle_00"]
+
+        self.assertEqual(frame.pelvis_anchor[0], 32)
+        self.assertEqual(frame.sole_anchor[1], 12)
+
     def test_airborne_frame_aligns_pelvis_without_runtime_offset(self) -> None:
         result = normalize(self.manifest_path)
         self.assertEqual(result.frames["Apex"].pelvis_anchor, (32, 58))

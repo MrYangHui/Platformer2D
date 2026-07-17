@@ -254,18 +254,21 @@ def normalize(manifest_path: Path) -> NormalizationResult:
 
         alignment = frame_data.get("alignment")
         if alignment == "grounded":
-            destination = (cell_width // 2, sole_line)
-            alignment_anchor = scaled_sole
+            offset = (
+                cell_width // 2 - scaled_pelvis[0],
+                sole_line - scaled_sole[1],
+            )
         elif alignment == "airborne":
             destination = _integer_pair(
                 frame_data.get("destination_anchor", [cell_width // 2, cell_height // 2]),
                 f"Frame '{name}' destination_anchor",
             )
-            alignment_anchor = scaled_pelvis
+            offset = (
+                destination[0] - scaled_pelvis[0],
+                destination[1] - scaled_pelvis[1],
+            )
         else:
             raise ValueError(f"Frame '{name}' alignment must be 'grounded' or 'airborne'")
-
-        offset = (destination[0] - alignment_anchor[0], destination[1] - alignment_anchor[1])
         paste_left = offset[0]
         paste_top = cell_height - (offset[1] + scaled.height)
         if (
