@@ -147,6 +147,95 @@ def _translate(anchor: tuple[int, int], offset: tuple[int, int]) -> tuple[int, i
     return anchor[0] + offset[0], anchor[1] + offset[1]
 
 
+def _motion_budget(group: dict[str, Any], key: str, group_name: str) -> float:
+    value = group.get(key)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(
+            f"Motion group '{group_name}' {key} must be a non-negative finite number"
+        )
+    try:
+        number = float(value)
+    except (OverflowError, TypeError, ValueError) as exception:
+        raise ValueError(
+            f"Motion group '{group_name}' {key} must be a non-negative finite number"
+        ) from exception
+    if not math.isfinite(number) or number < 0:
+        raise ValueError(
+            f"Motion group '{group_name}' {key} must be a non-negative finite number"
+        )
+    return number
+
+
+def _validate_motion_groups(
+    groups_data: Any,
+    frames: dict[str, FrameResult],
+) -> None:
+    if not isinstance(groups_data, list):
+        raise ValueError("motion_groups must be an array")
+
+    group_names: set[str] = set()
+    for group in groups_data:
+        if not isinstance(group, dict):
+            raise ValueError("Each motion group must be an object")
+        name = group.get("name")
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError("Each motion group requires a non-empty name")
+        name = name.strip()
+        if name in group_names:
+            raise ValueError(f"Duplicate motion group name: {name}")
+        group_names.add(name)
+        frame_names = group.get("frames")
+        if (
+            not isinstance(frame_names, list)
+            or len(frame_names) < 2
+            or any(not isinstance(frame_name, str) or not frame_name for frame_name in frame_names)
+        ):
+            raise ValueError(f"Motion group '{name}' requires at least two frame names")
+        if len(set(frame_names)) != len(frame_names):
+            raise ValueError(f"Motion group '{name}' contains duplicate frame names")
+        missing = [frame_name for frame_name in frame_names if frame_name not in frames]
+        if missing:
+            raise ValueError(
+                f"Motion group '{name}' references missing frame '{missing[0]}'"
+            )
+
+        group_frames = [frames[frame_name] for frame_name in frame_names]
+        axes = (
+            (
+                "X",
+                [frame.pelvis_anchor[0] for frame in group_frames],
+                _motion_budget(group, "max_pelvis_x_span", name),
+                _motion_budget(group, "max_pelvis_x_step", name),
+            ),
+            (
+                "Y",
+                [frame.pelvis_anchor[1] for frame in group_frames],
+                _motion_budget(group, "max_pelvis_y_span", name),
+                _motion_budget(group, "max_pelvis_y_step", name),
+            ),
+        )
+        for axis_name, values, span_budget, step_budget in axes:
+            span = max(values) - min(values)
+            if span > span_budget:
+                minimum_index = values.index(min(values))
+                maximum_index = values.index(max(values))
+                raise ValueError(
+                    f"Motion group '{name}' pelvis {axis_name} span "
+                    f"{frame_names[minimum_index]} -> {frame_names[maximum_index]} "
+                    f"is {span} px; "
+                    f"maximum is {span_budget:g} px"
+                )
+            for index, value in enumerate(values):
+                next_index = (index + 1) % len(values)
+                step = abs(values[next_index] - value)
+                if step > step_budget:
+                    raise ValueError(
+                        f"Motion group '{name}' pelvis {axis_name} step "
+                        f"{frame_names[index]} -> {frame_names[next_index]} is {step} px; "
+                        f"maximum is {step_budget:g} px"
+                    )
+
+
 def normalize(manifest_path: Path) -> NormalizationResult:
     manifest_path = Path(manifest_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -302,6 +391,7 @@ def normalize(manifest_path: Path) -> NormalizationResult:
             head_anchor=final_head,
         )
 
+    _validate_motion_groups(manifest.get("motion_groups", []), results)
     return NormalizationResult(atlas=atlas, frames=results)
 
 

@@ -151,6 +151,82 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
 
         self.assertEqual(alpha.getpixel((4, 105)), 0)
 
+    def test_motion_group_rejects_pelvis_y_span_over_budget(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["frames"][0]["anchors"]["pelvis"] = [32, 50]
+        data["frames"][0]["anchors"]["head"] = [32, 100]
+        data["frames"][1]["anchors"]["pelvis"] = [32, 70]
+        data["frames"][1]["anchors"]["head"] = [32, 120]
+        data["motion_groups"] = [self.motion_group(y_span=8, y_step=8)]
+        path = self.root / "rejected-motion-group.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "Run.*pelvis Y span.*Idle_00.*Idle_01"):
+            normalize(path)
+
+    def test_motion_group_accepts_sequence_inside_budget(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["motion_groups"] = [self.motion_group(y_span=2, y_step=2)]
+        path = self.root / "accepted-motion-group.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        result = normalize(path)
+
+        self.assertIn("Idle_00", result.frames)
+        self.assertIn("Idle_01", result.frames)
+
+    def test_motion_groups_rejects_explicit_null(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["motion_groups"] = None
+        path = self.root / "null-motion-groups.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "motion_groups must be an array"):
+            normalize(path)
+
+    def test_motion_group_rejects_unrepresentable_budget(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        group = self.motion_group(y_span=2, y_step=2)
+        group["max_pelvis_x_span"] = 10**400
+        data["motion_groups"] = [group]
+        path = self.root / "unrepresentable-motion-budget.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "non-negative finite number"):
+            normalize(path)
+
+    def test_motion_groups_reject_duplicate_names(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        group = self.motion_group(y_span=2, y_step=2)
+        data["motion_groups"] = [group, dict(group)]
+        path = self.root / "duplicate-motion-groups.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "Duplicate motion group name: Run"):
+            normalize(path)
+
+    def test_motion_group_rejects_duplicate_frame_names(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        group = self.motion_group(y_span=2, y_step=2)
+        group["frames"] = ["Idle_00", "Idle_00"]
+        data["motion_groups"] = [group]
+        path = self.root / "duplicate-motion-frames.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "Run.*duplicate frame names"):
+            normalize(path)
+
+    @staticmethod
+    def motion_group(y_span: int, y_step: int) -> dict[str, object]:
+        return {
+            "name": "Run",
+            "frames": ["Idle_00", "Idle_01"],
+            "max_pelvis_x_span": 2,
+            "max_pelvis_x_step": 2,
+            "max_pelvis_y_span": y_span,
+            "max_pelvis_y_step": y_step,
+        }
+
     def test_contact_sheet_is_written_with_rgba_content(self) -> None:
         output = self.root / "contact.png"
         build_contact_sheet(normalize(self.manifest_path), output)
