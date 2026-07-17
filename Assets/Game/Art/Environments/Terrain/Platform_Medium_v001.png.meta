@@ -103,9 +103,9 @@ TextureImporter:
       name: Platform_Medium_v001_0
       rect:
         serializedVersion: 2
-        x: 108
+        x: 273
         y: 181
-        width: 1962
+        width: 1632
         height: 272
       alignment: 0
       pivot: {x: 0, y: 0}

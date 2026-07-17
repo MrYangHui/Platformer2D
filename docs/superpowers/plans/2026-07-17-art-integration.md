@@ -41,7 +41,7 @@
 - Consumes: the ten committed PNG candidates and the three existing platform prefabs.
 - Produces: `ArtIntegrationConfigurator.Configure()` and platform prefabs whose visuals use the expected candidate Sprites.
 
-- [ ] **Step 1: Write the failing platform/import test**
+- [x] **Step 1: Write the failing platform/import test**
 
 Create `ArtIntegrationConfiguratorTests.cs` with tests that load each prefab through `PrefabUtility.LoadPrefabContents`, then assert:
 
@@ -82,13 +82,13 @@ public void FennyFrameSheetsUseBottomCenterPivotsAndComparableWorldHeight()
 
 `LoadSprites` returns `AssetDatabase.LoadAllAssetsAtPath(path).OfType<Sprite>().OrderBy(sprite => sprite.name).ToArray()`.
 
-- [ ] **Step 2: Run the focused EditMode fixture and verify RED**
+- [x] **Step 2: Run the focused EditMode fixture and verify RED**
 
 Run Unity with `-runTests -testPlatform EditMode -testFilter SnowbreakFan.Infrastructure.Tests.ArtIntegrationConfiguratorTests`.
 
 Expected: platform tests report built-in sprite paths and orange/blue tint; Fenny pivot/height test reports center pivots and mismatched world heights.
 
-- [ ] **Step 3: Apply minimal importer configuration**
+- [x] **Step 3: Apply minimal importer configuration**
 
 Edit the committed metadata so:
 
@@ -101,13 +101,13 @@ Edit the committed metadata so:
 
 Create `ArtIntegrationConfigurator.Configure()` with constants for the three prefab and texture paths. For each platform it must load prefab contents, load the first Sprite from the texture, assign `renderer.sprite`, set `renderer.color = Color.white`, `renderer.drawMode = SpriteDrawMode.Sliced`, `renderer.size = collider.size`, reset the Visual transform to identity, set sorting layer `Terrain`, save, and unload the prefab.
 
-- [ ] **Step 4: Run the editor configurator and verify GREEN**
+- [x] **Step 4: Run the editor configurator and verify GREEN**
 
 Run Unity batch mode with `-executeMethod SnowbreakFan.Infrastructure.Editor.ArtIntegrationConfigurator.Configure`, then rerun the focused fixture.
 
 Expected: all platform/import tests pass and existing `EveryPlatformVisualMatchesItsCollisionBounds` remains green.
 
-- [ ] **Step 5: Commit the importer and platform milestone**
+- [x] **Step 5: Commit the importer and platform milestone**
 
 ```bash
 git add Assets/Game/Art Assets/Game/Prefabs/Gameplay Assets/Game/Scripts/Infrastructure/Editor/ArtIntegrationConfigurator.cs Assets/Game/Tests/EditMode/Infrastructure/ArtIntegrationConfiguratorTests.cs
