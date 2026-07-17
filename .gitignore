@@ -5,6 +5,7 @@
 /[Uu]ser[Ss]ettings/
 /[Bb]uilds/
 /TestResults/
+/.superpowers/
 *.csproj
 *.sln
 *.suo
