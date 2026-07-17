@@ -4,7 +4,8 @@
   "references": [
     "Game.Infrastructure",
     "Game.Presentation",
-    "Game.Player"
+    "Game.Player",
+    "Unity.2D.Sprite.Editor"
   ],
   "includePlatforms": [
     "Editor"

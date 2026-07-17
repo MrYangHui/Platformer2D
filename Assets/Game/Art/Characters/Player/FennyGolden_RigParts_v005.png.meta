@@ -108,10 +108,10 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 600
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -160,463 +160,463 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_0
+      name: Head
       rect:
         serializedVersion: 2
-        x: 38
-        y: 849
-        width: 179
-        height: 222
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 768
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c5911376ced3a1b50800000000000000
-      internalID: 6564627492398766428
+      spriteID: 2cc855ec64ba60d42b151d80638ee131
+      internalID: 1476415216
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_1
+      name: RearHair
       rect:
         serializedVersion: 2
-        x: 284
-        y: 864
-        width: 200
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 256
+        y: 768
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 147dd47f53bc3fd80800000000000000
-      internalID: -8218001462378244287
+      spriteID: 77f7f732c1093f44288d0502afe624c5
+      internalID: -837751313
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_2
+      name: NearPonyUpper
       rect:
         serializedVersion: 2
-        x: 581
-        y: 843
-        width: 118
-        height: 234
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 512
+        y: 768
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 71c92497c431cb820800000000000000
-      internalID: 2935242276311571479
+      spriteID: 6384056be0245f649be3274d8067e302
+      internalID: 751580733
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_3
+      name: NearPonyLower
       rect:
         serializedVersion: 2
-        x: 856
-        y: 838
-        width: 80
-        height: 243
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 768
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6b54d2706928ed2c0800000000000000
-      internalID: -4404939804644653642
+      spriteID: f3f8348ac17a8f64f829dcd3bf21338a
+      internalID: -1917529337
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_4
+      name: FarPonyUpper
       rect:
         serializedVersion: 2
-        x: 1104
-        y: 845
-        width: 96
-        height: 232
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1024
+        y: 768
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c3eed894302be8c20800000000000000
-      internalID: 3210699311550426684
+      spriteID: 8594680b1fcaa4a49b166a6f81cc5cfc
+      internalID: -1051033532
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_5
+      name: FarPonyLower
       rect:
         serializedVersion: 2
-        x: 1367
-        y: 846
-        width: 82
-        height: 230
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1280
+        y: 768
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c938734cbcaf17210800000000000000
-      internalID: 1329119118128284572
+      spriteID: 820fc07fe386095479f5a458ae1fca04
+      internalID: -1470245761
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_6
+      name: Torso
       rect:
         serializedVersion: 2
-        x: 1587
-        y: 837
-        width: 153
-        height: 246
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 768
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 90488a88b658214a0800000000000000
-      internalID: -6624085405007838199
+      spriteID: 7a4db5d6e747cd84798c7b65201ca654
+      internalID: -1279796516
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_7
+      name: Pelvis
       rect:
         serializedVersion: 2
-        x: 54
-        y: 513
-        width: 148
-        height: 127
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 384
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 15a8342952ccd91d0800000000000000
-      internalID: -3342290886699283887
+      spriteID: 3f7fbdf32117fa14f98e59f8d63f9b15
+      internalID: -528165141
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_8
+      name: FrontSkirt
       rect:
         serializedVersion: 2
-        x: 290
-        y: 473
-        width: 187
-        height: 208
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 256
+        y: 384
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 2152042465b6bf3d0800000000000000
-      internalID: -3171823494329522926
+      spriteID: 8ba4cc5fc8308c5449236f4626be7b95
+      internalID: -54533774
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_9
+      name: RearSkirt
       rect:
         serializedVersion: 2
-        x: 545
-        y: 479
-        width: 190
-        height: 194
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 512
+        y: 384
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 3bfc2f925c4d59c30800000000000000
-      internalID: 4365629357082988467
+      spriteID: fb22479dd6a76d94c9b3ab47c6bed313
+      internalID: -188760322
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_10
+      name: Backpack
       rect:
         serializedVersion: 2
-        x: 819
-        y: 407
-        width: 152
-        height: 338
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 384
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7b00d772922e05f40800000000000000
-      internalID: 5715316593517199543
+      spriteID: 0aa0b3f2dbe733f479f0838b0434ca84
+      internalID: 1237465686
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_11
+      name: NearUpperArm
       rect:
         serializedVersion: 2
-        x: 1101
-        y: 458
-        width: 101
-        height: 237
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1024
+        y: 384
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: adf4359b8a01d6700800000000000000
-      internalID: 535102247576752090
+      spriteID: a98b6d05b5dc09142a5d0ee6da912182
+      internalID: 858624710
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_12
+      name: NearForearmHand
       rect:
         serializedVersion: 2
-        x: 1373
-        y: 447
-        width: 69
-        height: 260
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1280
+        y: 384
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 736092374baf8c300800000000000000
-      internalID: 272743430389040695
+      spriteID: b05beb26cca4f6141afe6095a966ab10
+      internalID: 1479818900
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_13
+      name: FarUpperArm
       rect:
         serializedVersion: 2
-        x: 1607
-        y: 463
-        width: 114
-        height: 226
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 384
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 24603594417adfb80800000000000000
-      internalID: -8359341627758410174
+      spriteID: 486b649dbdeaa9148a938d75b5d561cb
+      internalID: -1814470188
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_14
+      name: FarForearmHand
       rect:
         serializedVersion: 2
-        x: 91
-        y: 53
-        width: 73
-        height: 277
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e4f6d6f4d741f5d70800000000000000
-      internalID: 9033961905964543822
+      spriteID: ba89f93e8c7b25e4ca8d4c43d9a9d346
+      internalID: -501683018
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_15
+      name: RedThigh
       rect:
         serializedVersion: 2
-        x: 340
-        y: 55
-        width: 88
-        height: 274
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 256
+        y: 0
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b2aff2a8eda09f650800000000000000
-      internalID: 6267052307380173355
+      spriteID: dcf628a0a5d74e740be8762da96893f2
+      internalID: 1191787233
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_16
+      name: RedShin
       rect:
         serializedVersion: 2
-        x: 606
-        y: 60
-        width: 67
-        height: 265
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 512
+        y: 0
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7da7fa3077c4f7a00800000000000000
-      internalID: 756407336468183767
+      spriteID: fb7ff47dc782c0d4b989c2fb276cccee
+      internalID: 1563735114
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_17
+      name: RedBoot
       rect:
         serializedVersion: 2
-        x: 829
-        y: 90
-        width: 135
-        height: 205
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 0
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 936053a3f59535680800000000000000
-      internalID: -8767565784026905031
+      spriteID: 3434f6275ff9f6042a951ce630b32708
+      internalID: -1658198101
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_18
+      name: BareThigh
       rect:
         serializedVersion: 2
-        x: 1093
-        y: 61
-        width: 118
-        height: 263
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1024
+        y: 0
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 50a01cabb973a1440800000000000000
-      internalID: 4907295885966248453
+      spriteID: 9a5067550dba0d5479be7182a81f40ce
+      internalID: 911032724
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_19
+      name: BareShin
       rect:
         serializedVersion: 2
-        x: 1371
-        y: 58
-        width: 74
-        height: 269
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1280
+        y: 0
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f8b3c1d3bf1b7f320800000000000000
-      internalID: 2591735803195177871
+      spriteID: caad5722a7a06194c9a39caee7cd926d
+      internalID: -1863119596
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FennyGolden_RigParts_v005_20
+      name: BareBoot
       rect:
         serializedVersion: 2
-        x: 1600
-        y: 92
-        width: 127
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 0
+        width: 256
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.92}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8bdae9aa70cef8530800000000000000
-      internalID: 3859562923351256504
+      spriteID: b6eb9cb14869b08489f7f73db4086a3a
+      internalID: 1290429888
       vertices: []
       indices: 
       edges: []
@@ -625,7 +625,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5dcedeac085de3742954042aee359690
     internalID: 0
     vertices: []
     indices: 
@@ -635,27 +635,27 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      FennyGolden_RigParts_v005_0: 6564627492398766428
-      FennyGolden_RigParts_v005_1: -8218001462378244287
-      FennyGolden_RigParts_v005_10: 5715316593517199543
-      FennyGolden_RigParts_v005_11: 535102247576752090
-      FennyGolden_RigParts_v005_12: 272743430389040695
-      FennyGolden_RigParts_v005_13: -8359341627758410174
-      FennyGolden_RigParts_v005_14: 9033961905964543822
-      FennyGolden_RigParts_v005_15: 6267052307380173355
-      FennyGolden_RigParts_v005_16: 756407336468183767
-      FennyGolden_RigParts_v005_17: -8767565784026905031
-      FennyGolden_RigParts_v005_18: 4907295885966248453
-      FennyGolden_RigParts_v005_19: 2591735803195177871
-      FennyGolden_RigParts_v005_2: 2935242276311571479
-      FennyGolden_RigParts_v005_20: 3859562923351256504
-      FennyGolden_RigParts_v005_3: -4404939804644653642
-      FennyGolden_RigParts_v005_4: 3210699311550426684
-      FennyGolden_RigParts_v005_5: 1329119118128284572
-      FennyGolden_RigParts_v005_6: -6624085405007838199
-      FennyGolden_RigParts_v005_7: -3342290886699283887
-      FennyGolden_RigParts_v005_8: -3171823494329522926
-      FennyGolden_RigParts_v005_9: 4365629357082988467
+      Backpack: 1237465686
+      BareBoot: 1290429888
+      BareShin: -1863119596
+      BareThigh: 911032724
+      FarForearmHand: -501683018
+      FarPonyLower: -1470245761
+      FarPonyUpper: -1051033532
+      FarUpperArm: -1814470188
+      FrontSkirt: -54533774
+      Head: 1476415216
+      NearForearmHand: 1479818900
+      NearPonyLower: -1917529337
+      NearPonyUpper: 751580733
+      NearUpperArm: 858624710
+      Pelvis: -528165141
+      RearHair: -837751313
+      RearSkirt: -188760322
+      RedBoot: -1658198101
+      RedShin: 1563735114
+      RedThigh: 1191787233
+      Torso: -1279796516
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
