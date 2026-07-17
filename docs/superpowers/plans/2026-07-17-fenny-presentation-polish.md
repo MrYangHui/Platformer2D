@@ -436,11 +436,11 @@ git commit -m "fix: polish Fenny presentation"
 - Consumes: complete presentation polish implementation.
 - Produces: verified test XML, Windows Development Build, clean Git state, synchronized remote main.
 
-- [ ] **Step 1: Run the complete automated suites**
+- [x] **Step 1: Run the complete automated suites**
 
 Run all EditMode tests to `TestResults/FennyPolishFinalEditMode.xml` and all PlayMode tests to `TestResults/FennyPolishFinalPlayMode.xml`. Parse both `<test-run>` elements and require `failed="0"`.
 
-- [ ] **Step 2: Audit asset/meta pairing**
+- [x] **Step 2: Audit asset/meta pairing**
 
 Run the existing PowerShell audit over `Assets`. Expected:
 
@@ -449,7 +449,7 @@ MISSING_META=0
 ORPHAN_META=0
 ```
 
-- [ ] **Step 3: Build Windows x64**
+- [x] **Step 3: Build Windows x64**
 
 ```powershell
 & 'F:\unity\Hub\Editor\6000.3.19f1\Editor\Unity.exe' -batchmode -quit `
@@ -460,7 +460,7 @@ ORPHAN_META=0
 
 Expected log: `Build Finished, Result: Success.` Restore only the known Unity build-time serialization changes in DefaultVolumeProfile, UniversalRP, UniversalRenderPipelineGlobalSettings, ProjectSettings, and UnityConnectSettings with `apply_patch`.
 
-- [ ] **Step 4: Final diff and push**
+- [x] **Step 4: Final diff and push**
 
 Confirm `git diff --check` for non-Unity YAML, a clean worktree, and `HEAD` containing the design, plan, and implementation commits. Push `main` to `origin`; do not create a release.
 
