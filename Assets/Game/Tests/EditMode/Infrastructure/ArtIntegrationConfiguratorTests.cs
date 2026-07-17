@@ -37,36 +37,41 @@ namespace SnowbreakFan.Infrastructure.Tests
         }
 
         [Test]
-        public void PlayerPrefabUsesCutoutRigWithGroundOverlapAndStablePhysics()
+        public void PlayerPrefabUsesWholeFramesWithGroundOverlapAndStablePhysics()
         {
             const string playerPath = "Assets/Game/Prefabs/Player/Player.prefab";
             GameObject root = PrefabUtility.LoadPrefabContents(playerPath);
             try
             {
-                Transform visual = root.transform.Find("FennyVisualRig");
-                Component driver = root.GetComponent("PlayerRigPresentation2D");
-                Animator animator = visual != null ? visual.GetComponent<Animator>() : null;
+                Transform visual = root.transform.Find("Visual");
+                Component driver = root.GetComponent("PlayerFramePresentation2D");
+                SpriteRenderer renderer = visual != null
+                    ? visual.GetComponent<SpriteRenderer>()
+                    : null;
                 CapsuleCollider2D collider = root.GetComponent<CapsuleCollider2D>();
 
-                Assert.That(root.transform.Find("Visual"), Is.Null);
+                Assert.That(root.transform.Find("FennyVisualRig"), Is.Null);
                 Assert.That(root.GetComponent("PlayerSpriteAnimator2D"), Is.Null);
+                Assert.That(root.GetComponent("PlayerRigPresentation2D"), Is.Null);
                 Assert.That(driver, Is.Not.Null);
                 Assert.That(visual, Is.Not.Null);
-                Assert.That(visual.localPosition, Is.EqualTo(Vector3.zero));
-                Assert.That(animator, Is.Not.Null);
-                Assert.That(AssetDatabase.GetAssetPath(animator.runtimeAnimatorController),
-                    Is.EqualTo("Assets/Game/Animations/Player/Fenny_Rig.controller"));
-                Assert.That(visual.GetComponentsInChildren<SpriteRenderer>(true),
-                    Has.Length.EqualTo(21));
+                Assert.That(visual.localPosition, Is.EqualTo(new Vector3(0f, -1.1f, 0f)));
+                Assert.That(visual.localScale, Is.EqualTo(Vector3.one));
+                Assert.That(visual.GetComponent<Animator>(), Is.Null);
+                Assert.That(renderer, Is.Not.Null);
+                Assert.That(renderer.sprite.name, Is.EqualTo("Fenny_Idle_00"));
+                Assert.That(renderer.sortingLayerName, Is.EqualTo("Player"));
                 Assert.That(collider.size, Is.EqualTo(new Vector2(0.8f, 1.8f)));
 
                 float colliderBottom = collider.offset.y - collider.size.y * 0.5f;
-                float visualContact = visual.Find("GroundContact").localPosition.y;
-                Assert.That(visualContact, Is.EqualTo(colliderBottom - 0.1f).Within(0.001f));
+                Assert.That(visual.localPosition.y,
+                    Is.EqualTo(colliderBottom - 0.2f).Within(0.001f));
 
                 SerializedObject serialized = new(driver);
-                Assert.That(serialized.FindProperty("animator").objectReferenceValue,
-                    Is.SameAs(animator));
+                Assert.That(serialized.FindProperty("profile").objectReferenceValue,
+                    Is.Not.Null);
+                Assert.That(serialized.FindProperty("targetRenderer").objectReferenceValue,
+                    Is.SameAs(renderer));
                 Assert.That(serialized.FindProperty("visualRoot").objectReferenceValue,
                     Is.SameAs(visual));
                 Assert.That(serialized.FindProperty("body").objectReferenceValue,

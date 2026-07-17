@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc39b9a667f338643baa824d5eccd717, type: 3}
+  m_Name: FennyGoldenPresentation
+  m_EditorClassIdentifier: Game.Presentation::SnowbreakFan.Presentation.CharacterPresentationProfile
+  idleFrames:
+  - {fileID: -713690151, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: 261310557, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: 979082118, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: 1987255828, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  runFrames:
+  - {fileID: -152621632, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: 227043602, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: -2047168378, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: 1546869661, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: -1952722620, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: -1704136162, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: 288080261, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  - {fileID: -1188419574, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  risingFrame: {fileID: -134492116, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  apexFrame: {fileID: -1093783275, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  fallingFrame: {fileID: 556048899, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  fallbackFrame: {fileID: -713690151, guid: 4515d4c1d7daa0e43b0c664f0c206117, type: 3}
+  idleFramesPerSecond: 4
+  runFramesPerSecond: 16
+  movementThreshold: 0.1
+  referenceRunSpeed: 6
+  apexVelocityThreshold: 0.75
+  visualRootLocalPosition: {x: 0, y: -1.1, z: 0}
+  visualScale: 1

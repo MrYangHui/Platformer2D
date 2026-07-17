@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
+using SnowbreakFan.Infrastructure.Editor;
 using SnowbreakFan.Player;
 using SnowbreakFan.Presentation;
 using UnityEditor;
@@ -11,6 +12,13 @@ namespace SnowbreakFan.Infrastructure.Tests
 {
     public sealed class CharacterFramePipelineTests
     {
+        private const string AtlasPath =
+            "Assets/Game/Art/Characters/Player/FennyGolden_Frames_v006.png";
+        private const string ProfilePath =
+            "Assets/Game/Config/Characters/FennyGoldenPresentation.asset";
+        private const string PlayerPrefabPath =
+            "Assets/Game/Prefabs/Player/Player.prefab";
+
         private readonly List<Object> cleanup = new();
 
         [TearDown]
@@ -150,6 +158,78 @@ namespace SnowbreakFan.Infrastructure.Tests
             Assert.That(renderer.flipX, Is.True);
             Assert.That(visualObject.transform.localPosition, Is.EqualTo(fixedPosition));
             Assert.That(visualObject.transform.localScale, Is.EqualTo(fixedScale));
+        }
+
+        [Test]
+        public void ConfiguratorCreatesSemanticAtlasProfileAndStablePlayerPresentation()
+        {
+            FennyFrameConfigurator.Configure();
+
+            Sprite[] sprites = AssetDatabase.LoadAllAssetsAtPath(AtlasPath)
+                .OfType<Sprite>()
+                .OrderBy(sprite => sprite.name)
+                .ToArray();
+            Assert.That(sprites, Has.Length.EqualTo(15));
+            Assert.That(sprites.All(sprite => sprite.rect.size == new Vector2(768f, 1024f)),
+                Is.True);
+            Assert.That(sprites.All(sprite => sprite.pixelsPerUnit == 480f), Is.True);
+            Assert.That(sprites.All(sprite => sprite.pivot == new Vector2(384f, 0f)), Is.True);
+
+            CharacterPresentationProfile profile =
+                AssetDatabase.LoadAssetAtPath<CharacterPresentationProfile>(ProfilePath);
+            Assert.That(profile, Is.Not.Null);
+            Assert.That(profile.TryValidate(out string error), Is.True, error);
+            Assert.That(profile.IdleFrames.Count, Is.EqualTo(4));
+            Assert.That(profile.RunFrames.Count, Is.EqualTo(8));
+            Assert.That(profile.RisingFrame.name, Is.EqualTo("Fenny_Rising"));
+            Assert.That(profile.ApexFrame.name, Is.EqualTo("Fenny_Apex"));
+            Assert.That(profile.FallingFrame.name, Is.EqualTo("Fenny_Falling"));
+            Assert.That(profile.IdleFramesPerSecond, Is.EqualTo(4f));
+            Assert.That(profile.RunFramesPerSecond, Is.EqualTo(16f));
+            Assert.That(profile.ReferenceRunSpeed, Is.EqualTo(6f));
+            Assert.That(profile.VisualRootLocalPosition.y, Is.EqualTo(-1.1f));
+
+            GameObject player = PrefabUtility.LoadPrefabContents(PlayerPrefabPath);
+            try
+            {
+                Transform visual = player.transform.Find("Visual");
+                Assert.That(player.transform.Find("FennyVisualRig"), Is.Null);
+                Assert.That(player.GetComponent<PlayerRigPresentation2D>(), Is.Null);
+                Assert.That(player.GetComponent<PlayerFramePresentation2D>(), Is.Not.Null);
+                Assert.That(visual, Is.Not.Null);
+                Assert.That(visual.GetComponentsInChildren<SpriteRenderer>(true),
+                    Has.Length.EqualTo(1));
+                Assert.That(visual.localPosition, Is.EqualTo(new Vector3(0f, -1.1f, 0f)));
+                Assert.That(visual.localScale, Is.EqualTo(Vector3.one));
+                Assert.That(player.GetComponent<CapsuleCollider2D>().size,
+                    Is.EqualTo(new Vector2(0.8f, 1.8f)));
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(player);
+            }
+        }
+
+        [Test]
+        public void ConfiguratorIsIdempotentForAtlasProfileAndPlayer()
+        {
+            FennyFrameConfigurator.Configure();
+            Hash128[] first =
+            {
+                AssetDatabase.GetAssetDependencyHash(AtlasPath),
+                AssetDatabase.GetAssetDependencyHash(ProfilePath),
+                AssetDatabase.GetAssetDependencyHash(PlayerPrefabPath)
+            };
+
+            FennyFrameConfigurator.Configure();
+            Hash128[] second =
+            {
+                AssetDatabase.GetAssetDependencyHash(AtlasPath),
+                AssetDatabase.GetAssetDependencyHash(ProfilePath),
+                AssetDatabase.GetAssetDependencyHash(PlayerPrefabPath)
+            };
+
+            Assert.That(second, Is.EqualTo(first));
         }
 
         private CharacterPresentationProfile CreateValidProfile()

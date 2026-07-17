@@ -388,7 +388,7 @@ git commit -m "feat: drive standardized character frames"
 Assert.That(sprites, Has.Count.EqualTo(15));
 Assert.That(sprites.All(sprite => sprite.rect.size == new Vector2(768f, 1024f)), Is.True);
 Assert.That(sprites.All(sprite => sprite.pixelsPerUnit == 480f), Is.True);
-Assert.That(sprites.All(sprite => sprite.pivot == new Vector2(256f, 0f)), Is.True);
+Assert.That(sprites.All(sprite => sprite.pivot == new Vector2(384f, 0f)), Is.True);
 
 Transform visual = player.transform.Find("Visual");
 Assert.That(player.transform.Find("FennyVisualRig"), Is.Null);

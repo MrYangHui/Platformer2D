@@ -118,7 +118,7 @@ namespace SnowbreakFan.Infrastructure.Editor
         public static void Configure()
         {
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-            FennyRigBuilder.Build();
+            FennyFrameConfigurator.Configure();
 
             foreach (PlatformBinding binding in PlatformBindings)
                 ConfigurePlatform(binding);
