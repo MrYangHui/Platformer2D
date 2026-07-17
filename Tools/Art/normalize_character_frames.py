@@ -55,7 +55,7 @@ def _load_source(
     manifest_path: Path,
     source_name: str,
     source_data: Any,
-) -> tuple[Image.Image, tuple[int, int], int]:
+) -> tuple[Image.Image, tuple[int, int], int, float | None, bool]:
     if not isinstance(source_data, dict):
         raise ValueError(f"Source '{source_name}' must be an object")
     path = _resolve_path(manifest_path, source_data.get("path"), f"Source '{source_name}' path")
@@ -73,7 +73,48 @@ def _load_source(
         raise ValueError(f"Source '{source_name}' dimensions do not match its cell_size")
     if image.width // cell_size[0] != columns:
         raise ValueError(f"Source '{source_name}' columns do not match image width")
-    return image, cell_size, columns
+    expected = source_data.get("expected_head_pelvis")
+    if expected is not None and (not isinstance(expected, (int, float)) or expected <= 0):
+        raise ValueError(f"Source '{source_name}' expected_head_pelvis must be positive")
+    keep_largest = source_data.get("keep_largest_component", False)
+    if not isinstance(keep_largest, bool):
+        raise ValueError(f"Source '{source_name}' keep_largest_component must be boolean")
+    return image, cell_size, columns, float(expected) if expected is not None else None, keep_largest
+
+
+def _keep_largest_alpha_component(image: Image.Image) -> Image.Image:
+    width, height = image.size
+    alpha = image.getchannel("A").tobytes()
+    visited = bytearray(width * height)
+    largest: list[int] = []
+    for start, value in enumerate(alpha):
+        if value == 0 or visited[start]:
+            continue
+        component: list[int] = []
+        stack = [start]
+        visited[start] = 1
+        while stack:
+            index = stack.pop()
+            component.append(index)
+            x = index % width
+            y = index // width
+            for next_y in range(max(0, y - 1), min(height, y + 2)):
+                row_start = next_y * width
+                for next_x in range(max(0, x - 1), min(width, x + 2)):
+                    neighbor = row_start + next_x
+                    if not visited[neighbor] and alpha[neighbor] != 0:
+                        visited[neighbor] = 1
+                        stack.append(neighbor)
+        if len(component) > len(largest):
+            largest = component
+    if not largest:
+        return image
+    filtered_alpha = bytearray(width * height)
+    for index in largest:
+        filtered_alpha[index] = alpha[index]
+    filtered = image.copy()
+    filtered.putalpha(Image.frombytes("L", image.size, bytes(filtered_alpha)))
+    return filtered
 
 
 def _validate_anchor(
@@ -161,7 +202,13 @@ def normalize(manifest_path: Path) -> NormalizationResult:
         source_name = frame_data.get("source")
         if source_name not in sources:
             raise ValueError(f"Frame '{name}' references a missing source")
-        source, (source_width, source_height), source_columns = sources[source_name]
+        (
+            source,
+            (source_width, source_height),
+            source_columns,
+            source_reference,
+            keep_largest_component,
+        ) = sources[source_name]
         column, row = _integer_pair(frame_data.get("cell"), f"Frame '{name}' cell")
         source_rows = source.height // source_height
         if not 0 <= column < source_columns or not 0 <= row < source_rows:
@@ -174,10 +221,12 @@ def normalize(manifest_path: Path) -> NormalizationResult:
         pelvis = _validate_anchor(name, "pelvis", anchors.get("pelvis"), (source_width, source_height))
         head = _validate_anchor(name, "head", anchors.get("head"), (source_width, source_height))
         measured = math.dist(head, pelvis)
-        error = abs(measured - canonical) / canonical
+        expected_source_distance = source_reference or float(canonical)
+        error = abs(measured - expected_source_distance) / expected_source_distance
         if error > MAX_HEAD_PELVIS_ERROR:
             raise ValueError(
-                f"HeadPelvisRatio for frame '{name}' differs by {error:.3%}; maximum is 3%"
+                f"HeadPelvisRatio for frame '{name}' differs from source reference by "
+                f"{error:.3%}; maximum is 3%"
             )
 
         source_box = (
@@ -187,6 +236,8 @@ def normalize(manifest_path: Path) -> NormalizationResult:
             (row + 1) * source_height,
         )
         source_cell = source.crop(source_box)
+        if keep_largest_component:
+            source_cell = _keep_largest_alpha_component(source_cell)
         alpha_box = source_cell.getchannel("A").getbbox()
         if alpha_box is None:
             raise ValueError(f"Frame '{name}' has no opaque pixels")

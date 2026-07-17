@@ -50,6 +50,7 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
                     "path": str(self.source_path),
                     "cell_size": [cell_width, cell_height],
                     "columns": 4,
+                    "expected_head_pelvis": canonical,
                 }
             },
             "frames": [
@@ -105,6 +106,37 @@ class NormalizeCharacterFramesTests(unittest.TestCase):
         first = normalize(self.manifest_path).atlas.tobytes()
         second = normalize(self.manifest_path).atlas.tobytes()
         self.assertEqual(first, second)
+
+    def test_source_reference_scale_normalizes_to_canonical_distance(self) -> None:
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["cell_size"] = [128, 256]
+        data["sole_line"] = 24
+        data["sources"]["synthetic"]["expected_head_pelvis"] = 25
+        for frame in data["frames"]:
+            frame["anchors"]["pelvis"] = [32, 50]
+            frame["anchors"]["head"] = [32, 75]
+            if frame["alignment"] == "airborne":
+                frame["destination_anchor"] = [64, 116]
+        path = self.root / "half-scale-source.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        frame = normalize(path).frames["Idle_00"]
+
+        self.assertEqual(frame.head_anchor[1] - frame.pelvis_anchor[1], 50)
+
+    def test_optional_largest_component_filter_removes_grid_leakage(self) -> None:
+        with Image.open(self.source_path) as opened:
+            sheet = opened.convert("RGBA")
+        ImageDraw.Draw(sheet).rectangle((2, 100, 4, 102), fill=(255, 40, 20, 255))
+        sheet.save(self.source_path)
+        data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        data["sources"]["synthetic"]["keep_largest_component"] = True
+        path = self.root / "filtered-components.json"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        alpha = normalize(path).frames["Idle_00"].image.getchannel("A")
+
+        self.assertEqual(alpha.getpixel((4, 105)), 0)
 
     def test_contact_sheet_is_written_with_rgba_content(self) -> None:
         output = self.root / "contact.png"
