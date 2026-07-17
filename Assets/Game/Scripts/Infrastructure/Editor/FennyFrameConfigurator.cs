@@ -165,6 +165,7 @@ namespace SnowbreakFan.Infrastructure.Editor
                     visual = visualObject.transform;
                 }
                 visual.gameObject.layer = root.layer;
+                visual.gameObject.SetActive(true);
                 visual.localPosition = profile.VisualRootLocalPosition;
                 visual.localRotation = Quaternion.identity;
                 visual.localScale = Vector3.one * profile.VisualScale;
@@ -191,6 +192,7 @@ namespace SnowbreakFan.Infrastructure.Editor
                     root.GetComponent<PlayerFramePresentation2D>();
                 if (driver == null)
                     driver = root.AddComponent<PlayerFramePresentation2D>();
+                driver.enabled = true;
                 SerializedObject serialized = new(driver);
                 serialized.FindProperty("profile").objectReferenceValue = profile;
                 serialized.FindProperty("targetRenderer").objectReferenceValue = renderer;

@@ -343,24 +343,48 @@ namespace SnowbreakFan.Infrastructure.Tests
         [Test]
         public void RepeatedBuildPreservesAnimatorStateObjects()
         {
-            FennyRigBuilder.Build();
-            AnimatorController first = AssetDatabase.LoadAssetAtPath<AnimatorController>(
-                FennyRigBuilder.ControllerPath);
-            Dictionary<string, int> stateIds = first.layers[0].stateMachine.states
-                .ToDictionary(item => item.state.name, item => item.state.GetInstanceID());
-            Hash128 playerHash = AssetDatabase.GetAssetDependencyHash(
-                FennyRigBuilder.PlayerPrefabPath);
+            try
+            {
+                FennyRigBuilder.Build();
+                GameObject legacyPlayer = PrefabUtility.LoadPrefabContents(
+                    FennyRigBuilder.PlayerPrefabPath);
+                try
+                {
+                    Behaviour retainedFrameDriver =
+                        legacyPlayer.GetComponent("PlayerFramePresentation2D") as Behaviour;
+                    Assert.That(retainedFrameDriver, Is.Not.Null);
+                    Assert.That(retainedFrameDriver.enabled, Is.False);
+                    Transform retainedVisual = legacyPlayer.transform.Find("Visual");
+                    Assert.That(retainedVisual, Is.Not.Null);
+                    Assert.That(retainedVisual.gameObject.activeSelf, Is.False);
+                }
+                finally
+                {
+                    PrefabUtility.UnloadPrefabContents(legacyPlayer);
+                }
 
-            FennyRigBuilder.Build();
-            AnimatorController second = AssetDatabase.LoadAssetAtPath<AnimatorController>(
-                FennyRigBuilder.ControllerPath);
-            Dictionary<string, int> rebuiltIds = second.layers[0].stateMachine.states
-                .ToDictionary(item => item.state.name, item => item.state.GetInstanceID());
+                AnimatorController first = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    FennyRigBuilder.ControllerPath);
+                Dictionary<string, int> stateIds = first.layers[0].stateMachine.states
+                    .ToDictionary(item => item.state.name, item => item.state.GetInstanceID());
+                Hash128 playerHash = AssetDatabase.GetAssetDependencyHash(
+                    FennyRigBuilder.PlayerPrefabPath);
 
-            Assert.That(rebuiltIds, Is.EqualTo(stateIds));
-            Assert.That(AssetDatabase.GetAssetDependencyHash(
-                    FennyRigBuilder.PlayerPrefabPath),
-                Is.EqualTo(playerHash));
+                FennyRigBuilder.Build();
+                AnimatorController second = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                    FennyRigBuilder.ControllerPath);
+                Dictionary<string, int> rebuiltIds = second.layers[0].stateMachine.states
+                    .ToDictionary(item => item.state.name, item => item.state.GetInstanceID());
+
+                Assert.That(rebuiltIds, Is.EqualTo(stateIds));
+                Assert.That(AssetDatabase.GetAssetDependencyHash(
+                        FennyRigBuilder.PlayerPrefabPath),
+                    Is.EqualTo(playerHash));
+            }
+            finally
+            {
+                FennyFrameConfigurator.Configure();
+            }
         }
     }
 }

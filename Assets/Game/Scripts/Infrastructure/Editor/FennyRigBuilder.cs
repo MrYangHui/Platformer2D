@@ -69,12 +69,17 @@ namespace SnowbreakFan.Infrastructure.Editor
             {
                 Transform legacyVisual = root.transform.Find("Visual");
                 if (legacyVisual != null)
-                    Object.DestroyImmediate(legacyVisual.gameObject);
+                    legacyVisual.gameObject.SetActive(false);
 
                 PlayerSpriteAnimator2D legacyAnimator =
                     root.GetComponent<PlayerSpriteAnimator2D>();
                 if (legacyAnimator != null)
                     Object.DestroyImmediate(legacyAnimator);
+
+                PlayerFramePresentation2D frameDriver =
+                    root.GetComponent<PlayerFramePresentation2D>();
+                if (frameDriver != null)
+                    frameDriver.enabled = false;
 
                 Transform existingRig = root.transform.Find("FennyVisualRig");
                 GameObject rig = existingRig != null &&
