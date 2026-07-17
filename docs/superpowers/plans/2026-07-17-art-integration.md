@@ -129,7 +129,7 @@ git commit -m "art: integrate first level platform skins"
 - Consumes: explicit Main Camera Transform, four background Sprites, sorting layers, and the level scene.
 - Produces: `EnvironmentVisuals` with four `ParallaxLayer2D` children, each containing exactly three SpriteRenderer segments.
 
-- [ ] **Step 1: Write the failing scene-structure test**
+- [x] **Step 1: Write the failing scene-structure test**
 
 Add `PrototypeContainsConfiguredFourLayerBackground` to `LevelStructureTests` without referencing the not-yet-created component type:
 
@@ -152,11 +152,11 @@ public IEnumerator PrototypeContainsConfiguredFourLayerBackground()
 }
 ```
 
-- [ ] **Step 2: Run the focused PlayMode test and verify RED**
+- [x] **Step 2: Run the focused PlayMode test and verify RED**
 
 Expected: `EnvironmentVisuals` is null.
 
-- [ ] **Step 3: Add the minimal component and scene configuration**
+- [x] **Step 3: Add the minimal component and scene configuration**
 
 Create `ParallaxLayer2D` with serialized fields `cameraTransform`, `segments`, `horizontalFollow`, `verticalFollow`, `tileWidth`, and `overlap`. Its initial `LateUpdate` may only validate fields; movement is implemented in Task 3.
 
@@ -171,7 +171,7 @@ Extend the editor asmdef references with `Game.Presentation` and `Game.Player`. 
 
 Each segment receives the same layer Sprite, local positions `(-tileWidth,0)`, `(0,0)`, `(tileWidth,0)`, no collider, and the layer scale shown above. Serialize the camera and segment references explicitly and save the scene.
 
-- [ ] **Step 4: Run configurator and verify structure GREEN**
+- [x] **Step 4: Run configurator and verify structure GREEN**
 
 Run the configurator, then the focused PlayMode test. Expected: all four layers exist with three segments and no colliders.
 
@@ -187,7 +187,7 @@ Run the configurator, then the focused PlayMode test. Expected: all four layers 
 - Consumes: camera world position, layer origin, follow factors, three segment transforms, tile width, overlap.
 - Produces: stable layer-root follow and three segment centers surrounding the camera in layer-local space.
 
-- [ ] **Step 1: Write the failing movement/coverage test**
+- [x] **Step 1: Write the failing movement/coverage test**
 
 After the component type exists, add a UnityTest that loads the scene, selects `Background_Far`, records its root and segment positions, moves Main Camera `80` units in X, yields one frame, then asserts:
 
@@ -204,7 +204,7 @@ Assert.That(centers[2], Is.GreaterThan(cameraLocalX));
 
 Expected RED: the minimal component leaves the layer and segments unchanged.
 
-- [ ] **Step 2: Implement the minimal LateUpdate loop**
+- [x] **Step 2: Implement the minimal LateUpdate loop**
 
 `Awake` validates all references, stores `origin = transform.position`, and stores each segment's original local Y/Z. `LateUpdate` must:
 
@@ -228,11 +228,11 @@ for (int i = 0; i < segments.Length; i++)
 
 Validation requires exactly three non-null segments, a non-null camera, and positive tile width. Invalid configuration logs one error and disables only this component.
 
-- [ ] **Step 3: Verify parallax GREEN and full level fixture**
+- [x] **Step 3: Verify parallax GREEN and full level fixture**
 
 Run the focused movement test, then the full `LevelStructureTests`. Expected: all prior route and collision tests remain green.
 
-- [ ] **Step 4: Commit the environment milestone**
+- [x] **Step 4: Commit the environment milestone**
 
 ```bash
 git add Assets/Game/Scripts/Presentation Assets/Game/Scripts/Infrastructure/Editor Assets/Game/Scenes/10_Level_Prototype.unity Assets/Game/Tests/PlayMode/LevelStructureTests.cs

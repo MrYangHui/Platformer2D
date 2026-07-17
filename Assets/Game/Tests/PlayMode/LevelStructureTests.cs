@@ -81,6 +81,63 @@ namespace SnowbreakFan.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator PrototypeContainsConfiguredFourLayerBackground()
+        {
+            yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
+
+            GameObject root = GameObject.Find("EnvironmentVisuals");
+            Assert.That(root, Is.Not.Null);
+
+            string[] names =
+            {
+                "Background_Sky",
+                "Background_Far",
+                "Background_Mid",
+                "Background_Near"
+            };
+
+            foreach (string name in names)
+            {
+                Transform layer = root.transform.Find(name);
+                Assert.That(layer, Is.Not.Null, name);
+                Assert.That(layer.GetComponent("ParallaxLayer2D"), Is.Not.Null, name);
+                Assert.That(layer.GetComponentsInChildren<SpriteRenderer>(), Has.Length.EqualTo(3), name);
+                Assert.That(layer.GetComponentsInChildren<Collider2D>(), Is.Empty, name);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator FarBackgroundFollowsCameraAndKeepsSegmentsAroundView()
+        {
+            yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
+            yield return null;
+
+            Camera camera = Camera.main;
+            Behaviour brain = camera.GetComponent("CinemachineBrain") as Behaviour;
+            if (brain != null)
+                brain.enabled = false;
+
+            yield return null;
+
+            Transform layer = GameObject.Find("EnvironmentVisuals")
+                .transform
+                .Find("Background_Far");
+            float initialLayerX = layer.position.x;
+            camera.transform.position += Vector3.right * 80f;
+
+            yield return null;
+
+            Assert.That(layer.position.x, Is.EqualTo(initialLayerX + 80f * 0.88f).Within(0.05f));
+            float cameraLocalX = layer.InverseTransformPoint(camera.transform.position).x;
+            float[] centers = layer.GetComponentsInChildren<SpriteRenderer>()
+                .Select(renderer => renderer.transform.localPosition.x)
+                .OrderBy(value => value)
+                .ToArray();
+            Assert.That(centers[0], Is.LessThan(cameraLocalX));
+            Assert.That(centers[2], Is.GreaterThan(cameraLocalX));
+        }
+
+        [UnityTest]
         public IEnumerator EveryPlatformVisualMatchesItsCollisionBounds()
         {
             yield return SceneManager.LoadSceneAsync("10_Level_Prototype", LoadSceneMode.Single);
